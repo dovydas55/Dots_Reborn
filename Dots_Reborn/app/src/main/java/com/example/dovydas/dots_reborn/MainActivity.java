@@ -1,16 +1,41 @@
 package com.example.dovydas.dots_reborn;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Vibrator _vibrator;
+    private boolean _use_vibration = false;
+    SharedPreferences _sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        _vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        _sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        _use_vibration = _sp.getBoolean("vibrate",false);
+
+        //not supposed to be here, decide what to link vibrate to
+        if(_use_vibration) {
+            _vibrator.vibrate(500);
+        }
+
     }
 
     @Override
@@ -29,9 +54,13 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, InGameOptionsActivity.class);
+            startActivity(intent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
