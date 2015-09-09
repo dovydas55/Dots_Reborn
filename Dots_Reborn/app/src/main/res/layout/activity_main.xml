@@ -28,12 +28,12 @@
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_moves"/>
+                android:src="@drawable/ic_moves"/>
             <com.example.dovydas.dots_reborn.SquareIcon
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_timed"/>
+                android:src="@drawable/ic_timed"/>
         </LinearLayout>
 
         <LinearLayout
@@ -46,12 +46,12 @@
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_options"/>
+                android:src="@drawable/ic_options"/>
             <com.example.dovydas.dots_reborn.SquareIcon
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_scores"/>
+                android:src="@drawable/ic_scores"/>
         </LinearLayout>
     </LinearLayout>
 

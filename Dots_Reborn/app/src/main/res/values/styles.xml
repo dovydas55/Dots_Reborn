@@ -5,4 +5,15 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Dovy" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/dovydark</item>
+        <item name="android:textColor">@color/gunnhildurlight</item>
+    </style>
+
+    <style name="Gunnhildur" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/gunnhildurlight</item>
+        <item name="android:textColor">@color/dovydark</item>
+    </style>
+
+
 </resources>
