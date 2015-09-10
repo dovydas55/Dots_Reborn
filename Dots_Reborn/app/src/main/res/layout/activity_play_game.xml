@@ -2,9 +2,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.dovydas.dots_reborn.PlayGameActivity">
 
+    <com.example.dovydas.dots_reborn.BoardView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:background="#A0E0A0"
+        android:layout_gravity="center"
+        ></com.example.dovydas.dots_reborn.BoardView>
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+        <TextView
+            android:layout_width="0dp"
+            android:textSize="25sp"
+            android:id="@+id/play_display_time_or_moves"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="0dp"
+            android:textSize="25sp"
+            android:id="@+id/play_display_score"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/display_score"/>
+    </LinearLayout>
 
 
 </LinearLayout>

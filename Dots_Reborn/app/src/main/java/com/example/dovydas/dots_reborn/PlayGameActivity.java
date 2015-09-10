@@ -1,15 +1,21 @@
 package com.example.dovydas.dots_reborn;
 
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class PlayGameActivity extends AppCompatActivity {
 
     private String _gameMode;
+    private TextView _displayScore;
+    private TextView _displayTimeOrMoves;
+    private int _secondsLeft;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +26,25 @@ public class PlayGameActivity extends AppCompatActivity {
         _gameMode = intent.getStringExtra(MainActivity.GAME_MODE);
         Toast.makeText(getApplicationContext(), _gameMode, Toast.LENGTH_SHORT).show();
         /* *** *** *** *** *** */
+
+        _displayScore = (TextView) findViewById(R.id.play_display_score);
+        _displayTimeOrMoves = (TextView) findViewById(R.id.play_display_time_or_moves);
+
+        if(_gameMode.equals("Time mode")){
+            new CountDownTimer(30000, 100) {
+                public void onTick(long ms) {
+                    if (Math.round((float)ms / 1000.0f) != _secondsLeft)
+                    {
+                        _secondsLeft = Math.round((float)ms / 1000.0f);
+                        _displayTimeOrMoves.setText("Time " + _secondsLeft );
+                    }
+                }
+
+                public void onFinish() {
+                    _displayTimeOrMoves.setText("Time 0");
+                }
+            }.start();
+        }
 
     }
 

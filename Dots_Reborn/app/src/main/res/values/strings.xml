@@ -23,5 +23,6 @@
     <string name="title_activity_play_game">DOTS</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="display_score">Score: </string>
 
 </resources>
