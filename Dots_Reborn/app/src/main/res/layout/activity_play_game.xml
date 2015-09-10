@@ -19,6 +19,7 @@
         android:layout_weight="5"
         android:background="#A0E0A0"
         android:layout_margin="30dp"
+        android:padding="15dp"
         android:layout_gravity="center" />
 
 
