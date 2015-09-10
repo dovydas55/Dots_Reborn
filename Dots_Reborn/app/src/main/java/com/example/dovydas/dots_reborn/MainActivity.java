@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -37,6 +38,11 @@ public class MainActivity extends AppCompatActivity {
         _ic_2 = (SquareIcon) findViewById(R.id.home_time);
         _ic_3 = (SquareIcon) findViewById(R.id.home_highScore);
         _ic_4 = (SquareIcon) findViewById(R.id.home_options);
+
+        ActionBar action = getSupportActionBar();
+        action.setDisplayShowHomeEnabled(true);
+        action.setLogo(R.mipmap.ic_launcher);
+        action.setDisplayUseLogoEnabled(true);
 
 
     }
