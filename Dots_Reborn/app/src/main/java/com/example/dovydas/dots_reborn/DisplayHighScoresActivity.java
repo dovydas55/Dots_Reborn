@@ -7,14 +7,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public class DisplayHighScoresActivity extends AppCompatActivity {
 
     private Spinner _boardSizeSpinner;
     private String _selectedBoardSize;
+
+    private ListView _listView;
+    private RecordAdapter _adapter;
+    private ArrayList<Record> _data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +35,10 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
         String message = intent.getStringExtra(IntermediateHighscoreActivity.EXTRA_MESSAGE);
         TextView title = (TextView) findViewById(R.id.highScoreTitle);
         title.setText(message);
+        ///////////
 
         _boardSizeSpinner = (Spinner) findViewById(R.id.boardSize);
+        _listView = (ListView) findViewById(R.id.records);
         _boardSizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -40,6 +51,20 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
 
         });
 
+        _data = new ArrayList<Record>();
+        _adapter = new RecordAdapter(this, _data);
+        _listView.setAdapter(_adapter);
+
+        /* fill mock data */
+        init();
+
+    }
+
+    private void init(){
+        for(int i = 30; i > 0; i--){
+            _data.add(new Record(i*4, new Date()));
+        }
+        _adapter.notifyDataSetChanged();
     }
 
     @Override
