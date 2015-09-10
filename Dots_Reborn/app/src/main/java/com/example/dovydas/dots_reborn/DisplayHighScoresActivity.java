@@ -62,7 +62,7 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
 
         ActionBar action = getSupportActionBar();
         action.setDisplayShowHomeEnabled(true);
-        action.setLogo(R.mipmap.ic_scores);
+        action.setLogo(R.drawable.ic_scores);
         action.setDisplayUseLogoEnabled(true);
 
     }
