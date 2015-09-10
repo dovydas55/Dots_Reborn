@@ -10,12 +10,19 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 
 public class MainActivity extends AppCompatActivity {
 
     private Vibrator _vibrator;
     private boolean _use_vibration = false;
-    SharedPreferences _sp;
+    private SquareIcon _ic_1;
+    private SquareIcon _ic_2;
+    private SquareIcon _ic_3;
+    private SquareIcon _ic_4;
+    private SharedPreferences _sp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +31,13 @@ public class MainActivity extends AppCompatActivity {
 
         _vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         _sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+        _ic_1 = (SquareIcon) findViewById(R.id.home_moves);
+        _ic_2 = (SquareIcon) findViewById(R.id.home_time);
+        _ic_3 = (SquareIcon) findViewById(R.id.home_highScore);
+        _ic_4 = (SquareIcon) findViewById(R.id.home_options);
+
+
     }
 
     @Override
@@ -37,6 +51,36 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            /* animation settings */
+            final ScaleAnimation scaleAnimation = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            final ScaleAnimation scaleAnimation2 = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            final ScaleAnimation scaleAnimation3 = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            final ScaleAnimation scaleAnimation4 = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+
+            scaleAnimation.setDuration(300);
+
+            scaleAnimation2.setDuration(300);
+            scaleAnimation2.setStartOffset(300);
+
+            scaleAnimation3.setDuration(300);
+            scaleAnimation3.setStartOffset(600);
+
+            scaleAnimation4.setDuration(300);
+            scaleAnimation4.setStartOffset(900);
+
+            _ic_1.startAnimation(scaleAnimation);
+            _ic_2.startAnimation(scaleAnimation2);
+            _ic_3.startAnimation(scaleAnimation4);
+            _ic_4.startAnimation(scaleAnimation3);
+            /* end of animation settings */
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
