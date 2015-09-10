@@ -20,5 +20,8 @@
     <string name="time_mode">Time Mode</string>
 
     <string name="clear_history">Clear!</string>
+    <string name="title_activity_play_game">DOTS</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>

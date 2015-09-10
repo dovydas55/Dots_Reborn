@@ -26,12 +26,14 @@
             android:gravity="center">
             <com.example.dovydas.dots_reborn.SquareIcon
                 android:layout_width="0dp"
+                android:onClick="playMoveMode"
                 android:id="@+id/home_moves"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:src="@drawable/ic_moves"/>
             <com.example.dovydas.dots_reborn.SquareIcon
                 android:id="@+id/home_time"
+                android:onClick="playTimeMode"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"

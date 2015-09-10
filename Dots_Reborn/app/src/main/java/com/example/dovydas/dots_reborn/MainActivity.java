@@ -15,6 +15,7 @@ import android.view.animation.ScaleAnimation;
 
 public class MainActivity extends AppCompatActivity {
 
+    public final static String GAME_MODE = "com.example.dovydas.dots_reborn.GAME_MODE";
     private Vibrator _vibrator;
     private boolean _use_vibration = false;
     private SquareIcon _ic_1;
@@ -113,6 +114,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void showOptions(View v){
         Intent intent = new Intent(this, StartGameOptionsActivity.class);
+        startActivity(intent);
+    }
+
+    public void playMoveMode(View v){
+        Intent intent = new Intent(this, PlayGameActivity.class);
+        intent.putExtra(GAME_MODE, "Move mode");
+        startActivity(intent);
+    }
+
+    public void playTimeMode(View v){
+        Intent intent = new Intent(this, PlayGameActivity.class);
+        intent.putExtra(GAME_MODE, "Time mode");
         startActivity(intent);
     }
 
