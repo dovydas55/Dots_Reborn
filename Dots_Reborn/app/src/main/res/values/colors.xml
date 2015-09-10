@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="dovydark">#191919</color>
+    <color name="gunnhildurlight">#FFFEFC</color>
     <color name="danger_red">#DF3E3E</color>
 </resources>
