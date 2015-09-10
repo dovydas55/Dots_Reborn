@@ -106,5 +106,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void showHighScores(View v){
+        Intent intent = new Intent(this, IntermediateHighscoreActivity.class);
+        startActivity(intent);
+    }
+
 
 }

@@ -27,6 +27,7 @@ Dots_Reborn/proguard/
 
 # Android Studio Navigation editor temp files
 Dots_Reborn/.navigation/
+*.iml
 
 # Android Studio captures folder
 Dots_Reborn/captures/

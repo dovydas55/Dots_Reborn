@@ -52,6 +52,7 @@
                 android:src="@mipmap/ic_options"/>
             <com.example.dovydas.dots_reborn.SquareIcon
                 android:layout_width="0dp"
+                android:onClick="showHighScores"
                 android:id="@+id/home_highScore"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
