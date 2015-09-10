@@ -12,7 +12,7 @@
         android:theme="@style/Dovy" >
         <activity
             android:name=".MainActivity"
-            android:label="" >
+            android:icon="@mipmap/ic_launcher" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,19 +25,19 @@
         </activity>
         <activity
             android:name=".IntermediateHighscoreActivity"
-            android:label="@string/title_activity_intermediate_highscore" >
+            android:icon="@drawable/ic_scores">
         </activity>
         <activity
             android:name=".DisplayHighScoresActivity"
-            android:label="@string/title_activity_display_high_scores" >
+            android:icon="@drawable/ic_scores">
         </activity>
         <activity
             android:name=".StartGameOptionsActivity"
-            android:label="@string/title_activity_start_game_options" >
+            android:icon="@drawable/ic_options">
         </activity>
         <activity
             android:name=".PlayGameActivity"
-            android:label="@string/title_activity_play_game" >
+            android:icon="@drawable/ic_timed">
         </activity>
     </application>
 

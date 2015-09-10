@@ -2,6 +2,7 @@ package com.example.dovydas.dots_reborn;
 
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,7 +31,14 @@ public class PlayGameActivity extends AppCompatActivity {
         _displayScore = (TextView) findViewById(R.id.play_display_score);
         _displayTimeOrMoves = (TextView) findViewById(R.id.play_display_time_or_moves);
 
+        ActionBar action = getSupportActionBar();
+        action.setDisplayShowHomeEnabled(true);
+        action.setLogo(R.mipmap.ic_moves);
+        action.setDisplayUseLogoEnabled(true);
+
         if(_gameMode.equals("Time mode")){
+            action.setLogo(R.mipmap.ic_timed);
+
             new CountDownTimer(30000, 100) {
                 public void onTick(long ms) {
                     if (Math.round((float)ms / 1000.0f) != _secondsLeft)
@@ -64,6 +72,8 @@ public class PlayGameActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, InGameOptionsActivity.class);
+            startActivity(intent);
             return true;
         }
 

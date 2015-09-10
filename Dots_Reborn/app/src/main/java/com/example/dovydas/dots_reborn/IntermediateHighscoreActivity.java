@@ -1,6 +1,7 @@
 package com.example.dovydas.dots_reborn;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,6 +15,11 @@ public class IntermediateHighscoreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intermediate_highscore);
+
+        ActionBar action = getSupportActionBar();
+        action.setDisplayShowHomeEnabled(true);
+        action.setLogo(R.mipmap.ic_scores);
+        action.setDisplayUseLogoEnabled(true);
 
     }
 
@@ -33,6 +39,8 @@ public class IntermediateHighscoreActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, InGameOptionsActivity.class);
+            startActivity(intent);
             return true;
         }
 
