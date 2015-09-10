@@ -111,5 +111,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void showOptions(View v){
+        Intent intent = new Intent(this, StartGameOptionsActivity.class);
+        startActivity(intent);
+    }
+
 
 }
