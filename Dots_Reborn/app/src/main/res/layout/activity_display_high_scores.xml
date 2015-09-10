@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.dovydas.dots_reborn.DisplayHighScoresActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textSize="35sp"
+        android:gravity="center"
+        android:id="@+id/highScoreTitle"
+        />
+
+    <Spinner
+        android:id="@+id/boardSize"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:entries="@array/highscore_menu"
+        />
+
+    <ListView
+        android:id="@+id/records"
+        android:layout_weight="6"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/danger_red"
+        android:textSize="20sp"
+        android:onClick="clearHistory"
+        android:text="@string/clear_history"/>
+
+</LinearLayout>
