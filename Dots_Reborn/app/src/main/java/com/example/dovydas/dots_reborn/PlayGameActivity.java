@@ -33,11 +33,11 @@ public class PlayGameActivity extends AppCompatActivity {
 
         ActionBar action = getSupportActionBar();
         action.setDisplayShowHomeEnabled(true);
-        action.setLogo(R.mipmap.ic_moves);
+        action.setLogo(R.drawable.ic_moves);
         action.setDisplayUseLogoEnabled(true);
 
         if(_gameMode.equals("Time mode")){
-            action.setLogo(R.mipmap.ic_timed);
+            action.setLogo(R.drawable.ic_timed);
 
             new CountDownTimer(30000, 100) {
                 public void onTick(long ms) {
