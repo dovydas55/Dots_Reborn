@@ -29,6 +29,8 @@ public class BoardView extends View {
     private HashMap<Integer, String> _colorMap;
     private boolean _isMoving;
     private Point _selectedPoint;
+    private Point _firstContact;
+    private boolean _isMatch = false;
 
 
     private Rect _rect = new Rect();
@@ -51,6 +53,8 @@ public class BoardView extends View {
         _colorMap = new HashMap<>();
         _isMoving = false;
         _selectedPoint = null;
+        _firstContact = null;
+        _isMatch = false;
 
         initializeColorMap();
     }
@@ -118,6 +122,7 @@ public class BoardView extends View {
                     /* USER HAS CLICKED ON THIS CIRCLE */
                     _isMoving = true;
                     _selectedPoint = p;
+                    _firstContact = p;
                     _matchedPoints.add(p); /* adding very first point of the sequence */
 
                     Log.d("PlayGameActivity", "*********************************************************");
@@ -130,15 +135,12 @@ public class BoardView extends View {
             }
         } else if(event.getAction() == MotionEvent.ACTION_MOVE){
             if(_isMoving){
-                if( xToCol(x) == _selectedPoint.getCol() + 1 || xToCol(x) == _selectedPoint.getCol() - 1 || yToRow(y) == _selectedPoint.getRow() + 1 || yToRow(y) == _selectedPoint.getRow() - 1 ){
                     for(int i = 0; i < _pointSet.size(); i++) {
                         if (_pointSet.get(i).getColor() == _selectedPoint.getColor() && adjacentPoint(_pointSet.get(i))) {
-                            /* MATCH */
-                            if(_matchedPoints.size() == 0){
-                                _matchedPoints.add(_selectedPoint); /* adding first point in the sequence */
-                            }
+
                             _selectedPoint = _pointSet.get(i);
                             _matchedPoints.add(_pointSet.get(i)); /* still need to add first point */
+                            _isMatch = true;
                             _pointSet.remove(i);
 
                             //Log.d("PlayGameActivity", "*************************** MATCH ******************************");
@@ -149,12 +151,19 @@ public class BoardView extends View {
 
                         }
                     }
-                }
-
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP){
             _selectedPoint = null;
             _isMoving = false;
+            if(_isMatch){
+                for(int i = 0; i < _pointSet.size(); i++){
+                    if(_firstContact.getRow() == _pointSet.get(i).getRow() && _firstContact.getCol() == _pointSet.get(i).getCol()){
+                        _pointSet.remove(i);
+                    }
+                }
+                _isMatch = false;
+            }
+
             invalidate(); /* delete matched points */
             /********************/
             _matchedPoints.clear(); /* for now just delete all matched points */
