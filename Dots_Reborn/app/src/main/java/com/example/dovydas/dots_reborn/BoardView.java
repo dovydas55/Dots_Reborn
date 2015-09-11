@@ -24,10 +24,11 @@ public class BoardView extends View {
     private int _cellWidth;
     private int _cellHeight;
     private ArrayList<Point> _pointSet;
+    private ArrayList<Point> _matchedPoints;
+
     private HashMap<Integer, String> _colorMap;
     private boolean _isMoving;
     private Point _selectedPoint;
-    private Point _prevPoint;
 
 
     private Rect _rect = new Rect();
@@ -45,10 +46,11 @@ public class BoardView extends View {
         _paint.setAntiAlias(true);
 
         _pointSet = new ArrayList<>();
+        _matchedPoints = new ArrayList<>();
+
         _colorMap = new HashMap<>();
         _isMoving = false;
         _selectedPoint = null;
-        _prevPoint = null;
 
         initializeColorMap();
     }
@@ -128,17 +130,22 @@ public class BoardView extends View {
         } else if(event.getAction() == MotionEvent.ACTION_MOVE){
             if(_isMoving){
                 if( xToCol(x) == _selectedPoint.getCol() + 1 || xToCol(x) == _selectedPoint.getCol() - 1 || yToRow(y) == _selectedPoint.getRow() + 1 || yToRow(y) == _selectedPoint.getRow() - 1 ){
-                    for(Point ptn : _pointSet) {
-                        if (ptn.getColor() == _selectedPoint.getColor() && adjacentPoint(ptn)) {
+                    for(int i = 0; i < _pointSet.size(); i++) {
+                        if (_pointSet.get(i).getColor() == _selectedPoint.getColor() && adjacentPoint(_pointSet.get(i))) {
                             /* MATCH */
-                            _prevPoint = _selectedPoint;
-                            _selectedPoint = ptn;
+                            if(_matchedPoints.size() == 0){
+                                _matchedPoints.add(_selectedPoint); /* adding first point in the sequence */
+                            }
+                            _selectedPoint = _pointSet.get(i);
 
-                            Log.d("PlayGameActivity", "*************************** MATCH ******************************");
-                            Log.d("PlayGameActivity", "COLUMN (prev - cur)  " + Integer.toString(_prevPoint.getCol()) + "  <-->  " + Integer.toString(_selectedPoint.getCol()));
-                            Log.d("PlayGameActivity", "ROW (prev - cur)  " + Integer.toString(_prevPoint.getRow()) + "  <-->  " + Integer.toString(_selectedPoint.getRow()));
+                            _matchedPoints.add(_pointSet.get(i)); /* still need to add first point */
+                            _pointSet.remove(i);
+
+                            //Log.d("PlayGameActivity", "*************************** MATCH ******************************");
+                            //Log.d("PlayGameActivity", "COLUMN (prev - cur)  " + Integer.toString(_firstPointInSequence.getCol()) + "  <-->  " + Integer.toString(_selectedPoint.getCol()));
+                            //Log.d("PlayGameActivity", "ROW (prev - cur)  " + Integer.toString(_firstPointInSequence.getRow()) + "  <-->  " + Integer.toString(_selectedPoint.getRow()));
                             //Log.d("PlayGameActivity", "COLOR (prev - cur)  " + Integer.toString(_prevPoint.getColor()) + "  <-->  " + Integer.toString(_selectedPoint.getColor()));
-                            Log.d("PlayGameActivity", "****************************************************************");
+                            //Log.d("PlayGameActivity", "****************************************************************");
 
                         }
                     }
@@ -147,8 +154,11 @@ public class BoardView extends View {
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP){
             _selectedPoint = null;
-            _prevPoint = null;
             _isMoving = false;
+            invalidate(); /* delete matched points */
+            /********************/
+            _matchedPoints.clear(); /* for now just delete all matched points */
+            /********************/
         }
 
         return true;
@@ -162,11 +172,19 @@ public class BoardView extends View {
 
     private boolean adjacentPoint(Point p){
         if(_selectedPoint.getRow() == p.getRow()){
-            if(_selectedPoint.getCol() + 1 == p.getCol()) return true;
-            else if(_selectedPoint.getCol() - 1 == p.getCol()) return true;
+            if(_selectedPoint.getCol() + 1 == p.getCol()) {
+                return true;
+            }
+            else if(_selectedPoint.getCol() - 1 == p.getCol()) {
+                return true;
+            }
         } else if(_selectedPoint.getCol() == p.getCol()){
-            if(_selectedPoint.getRow() + 1 == p.getRow()) return true;
-            else if(_selectedPoint.getRow() - 1 == p.getRow()) return true;
+            if(_selectedPoint.getRow() + 1 == p.getRow()) {
+                return true;
+            }
+            else if(_selectedPoint.getRow() - 1 == p.getRow()) {
+                return true;
+            }
         }
         return false;
     }
