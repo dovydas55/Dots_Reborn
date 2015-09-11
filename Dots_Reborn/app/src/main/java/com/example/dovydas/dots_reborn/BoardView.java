@@ -118,6 +118,7 @@ public class BoardView extends View {
                     /* USER HAS CLICKED ON THIS CIRCLE */
                     _isMoving = true;
                     _selectedPoint = p;
+                    _matchedPoints.add(p); /* adding very first point of the sequence */
 
                     Log.d("PlayGameActivity", "*********************************************************");
                     Log.d("PlayGameActivity", "COLUMN  " + Integer.toString(_selectedPoint.getCol()));
@@ -137,7 +138,6 @@ public class BoardView extends View {
                                 _matchedPoints.add(_selectedPoint); /* adding first point in the sequence */
                             }
                             _selectedPoint = _pointSet.get(i);
-
                             _matchedPoints.add(_pointSet.get(i)); /* still need to add first point */
                             _pointSet.remove(i);
 
