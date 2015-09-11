@@ -27,6 +27,7 @@ public class BoardView extends View {
     private HashMap<Integer, String> _colorMap;
     private boolean _isMoving;
     private Point _selectedPoint;
+    private Point _prevPoint;
 
 
     private Rect _rect = new Rect();
@@ -47,6 +48,7 @@ public class BoardView extends View {
         _colorMap = new HashMap<>();
         _isMoving = false;
         _selectedPoint = null;
+        _prevPoint = null;
 
         initializeColorMap();
     }
@@ -108,9 +110,6 @@ public class BoardView extends View {
         int x = (int) event.getX();
         int y = (int) event.getY();
 
-        int col = xToCol(x);
-        int row = yToRow(y);
-
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             for(Point p : _pointSet){
                 if(p.getCircle().contains(x, y)){
@@ -123,11 +122,32 @@ public class BoardView extends View {
                     Log.d("PlayGameActivity", "ROW  " + Integer.toString(_selectedPoint.getRow()));
                     Log.d("PlayGameActivity", "COLOR  " + Integer.toString(_selectedPoint.getColor()));
                     Log.d("PlayGameActivity", "*********************************************************");
-                    
+
                 }
+            }
+        } else if(event.getAction() == MotionEvent.ACTION_MOVE){
+            if(_isMoving){
+                if( xToCol(x) == _selectedPoint.getCol() + 1 || xToCol(x) == _selectedPoint.getCol() - 1 || yToRow(y) == _selectedPoint.getRow() + 1 || yToRow(y) == _selectedPoint.getRow() - 1 ){
+                    for(Point ptn : _pointSet) {
+                        if (ptn.getColor() == _selectedPoint.getColor() && adjacentPoint(ptn)) {
+                            /* MATCH */
+                            _prevPoint = _selectedPoint;
+                            _selectedPoint = ptn;
+
+                            Log.d("PlayGameActivity", "*************************** MATCH ******************************");
+                            Log.d("PlayGameActivity", "COLUMN (prev - cur)  " + Integer.toString(_prevPoint.getCol()) + "  <-->  " + Integer.toString(_selectedPoint.getCol()));
+                            Log.d("PlayGameActivity", "ROW (prev - cur)  " + Integer.toString(_prevPoint.getRow()) + "  <-->  " + Integer.toString(_selectedPoint.getRow()));
+                            //Log.d("PlayGameActivity", "COLOR (prev - cur)  " + Integer.toString(_prevPoint.getColor()) + "  <-->  " + Integer.toString(_selectedPoint.getColor()));
+                            Log.d("PlayGameActivity", "****************************************************************");
+
+                        }
+                    }
+                }
+
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP){
             _selectedPoint = null;
+            _prevPoint = null;
             _isMoving = false;
         }
 
@@ -139,6 +159,17 @@ public class BoardView extends View {
     /***************************************************************************************/
     /********************************* PRIVATE METHODS *************************************/
     /***************************************************************************************/
+
+    private boolean adjacentPoint(Point p){
+        if(_selectedPoint.getRow() == p.getRow()){
+            if(_selectedPoint.getCol() + 1 == p.getCol()) return true;
+            else if(_selectedPoint.getCol() - 1 == p.getCol()) return true;
+        } else if(_selectedPoint.getCol() == p.getCol()){
+            if(_selectedPoint.getRow() + 1 == p.getRow()) return true;
+            else if(_selectedPoint.getRow() - 1 == p.getRow()) return true;
+        }
+        return false;
+    }
 
     private void initializePoints(){
         /* initially color set is 0 - 5 */
@@ -159,10 +190,10 @@ public class BoardView extends View {
         return circlePaint;
     }
 
-    private RectF createCircle(int col, int row){
+    private RectF createCircle(int row, int col){
         RectF circle = new RectF();
         circle.set(0, 0, _cellWidth, _cellHeight);
-        circle.inset(_cellWidth * 0.1f, _cellHeight * 0.1f);
+        circle.inset(_cellWidth * 0.2f, _cellHeight * 0.2f);
 
         circle.offset(colToX(col), rowToY(row));
         return circle;
