@@ -1,5 +1,8 @@
 package com.example.dovydas.dots_reborn;
 
+import android.graphics.Paint;
+import android.graphics.RectF;
+
 /**
  * Created by dovydas on 9/10/2015.
  */
@@ -10,12 +13,28 @@ public class Point {
     private double _y;
     private int _color;
     private boolean _marked;
+    private RectF _circle;
+    private Paint _paint;
 
 
-    public Point(int x, int y, int color){
-        _x = x;
-        _y = y;
+    public Point(int row, int col, int color, Paint paint, RectF circle){
+        _row = row;
+        _col = col;
         _color = color;
+        _circle = circle;
+        _paint = paint;
+    }
+
+    public RectF getCircle(){
+        return _circle;
+    }
+
+    public Paint getPaint(){
+        return _paint;
+    }
+
+    public int getColor(){
+        return _color;
     }
 
     public int getRow(){

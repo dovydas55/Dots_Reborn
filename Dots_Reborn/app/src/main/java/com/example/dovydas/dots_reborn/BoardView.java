@@ -5,8 +5,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Created by Dovydas on 9/10/15.
@@ -15,6 +22,9 @@ public class BoardView extends View {
 
     private int _cellWidth;
     private int _cellHeight;
+    private ArrayList<Point> _pointSet;
+    private HashMap<Integer, String> _colorMap;
+
 
     private Rect _rect = new Rect();
     private Paint _paint = new Paint();
@@ -30,7 +40,14 @@ public class BoardView extends View {
         _paint.setStrokeWidth(2);
         _paint.setAntiAlias(true);
 
+
+        _pointSet = new ArrayList<>();
+        _colorMap = new HashMap<>();
+
+
+        initializeColorMap();
     }
+
 
     @Override
     protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec ) {
@@ -42,6 +59,7 @@ public class BoardView extends View {
         setMeasuredDimension(size + getPaddingLeft() + getPaddingRight(),
                 size + getPaddingTop() + getPaddingBottom());
 
+
     }
 
     @Override
@@ -50,6 +68,8 @@ public class BoardView extends View {
         int   boardHeight = (yNew - getPaddingTop() - getPaddingBottom());
         _cellWidth = boardWidth / NUM_CELLS;
         _cellHeight = boardHeight / NUM_CELLS;
+
+        initializePoints(); /* WHERE IS THE BEST PLACE TO CALL THIS? */
 
     }
 
@@ -70,13 +90,44 @@ public class BoardView extends View {
         /* ********************************************************* */
 
 
-
-
+        for(Point point : _pointSet){
+            canvas.drawOval(point.getCircle(), point.getPaint()); /* draw all points */
+        }
 
     }
 
 
+    /***************************************************************************************/
+    /********************************* PRIVATE METHODS *************************************/
+    /***************************************************************************************/
 
+    private void initializePoints(){
+        /* initially color set is 0 - 5 */
+        Random rand = new Random();
+        for(int i = 0; i < NUM_CELLS; i++){
+            for(int j = 0; j < NUM_CELLS; j++){
+                int color = rand.nextInt(6); /* General formula rand.nextInt((max - min) + 1) + min;*/
+                _pointSet.add(new Point(i, j, color, createPaintBrush(color), createCircle(i, j)));
+            }
+        }
+    }
+
+    private Paint createPaintBrush(int color){
+        Paint circlePaint = new Paint();
+        circlePaint.setColor(Color.parseColor(_colorMap.get(color)));
+        circlePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        circlePaint.setAntiAlias(true);
+        return circlePaint;
+    }
+
+    private RectF createCircle(int col, int row){
+        RectF circle = new RectF();
+        circle.set(0, 0, _cellWidth, _cellHeight);
+        circle.inset(_cellWidth * 0.1f, _cellHeight * 0.1f);
+
+        circle.offset(colToX(col), rowToY(row));
+        return circle;
+    }
 
     private int xToCol( int x ) {
         return (x - getPaddingLeft()) / _cellWidth;
@@ -90,5 +141,17 @@ public class BoardView extends View {
     private int rowToY( int row ) {
         return  row * _cellHeight + getPaddingTop();
     }
+
+    private void initializeColorMap(){
+        _colorMap.put(0, "#FF0000");
+        _colorMap.put(1, "#00FF00");
+        _colorMap.put(2, "#0000FF");
+        _colorMap.put(3, "#FF00FF");
+        _colorMap.put(4, "#993333");
+        _colorMap.put(5, "#006666");
+
+    }
+
+    /***************************************************************************************/
 
 }
