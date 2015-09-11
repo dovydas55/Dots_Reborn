@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -24,6 +25,8 @@ public class BoardView extends View {
     private int _cellHeight;
     private ArrayList<Point> _pointSet;
     private HashMap<Integer, String> _colorMap;
+    private boolean _isMoving;
+    private Point _selectedPoint;
 
 
     private Rect _rect = new Rect();
@@ -40,14 +43,19 @@ public class BoardView extends View {
         _paint.setStrokeWidth(2);
         _paint.setAntiAlias(true);
 
-
         _pointSet = new ArrayList<>();
         _colorMap = new HashMap<>();
-
+        _isMoving = false;
+        _selectedPoint = null;
 
         initializeColorMap();
     }
 
+    /* this function can be used for shuffeling the points */
+    public void schuffleBoard(){
+        initializePoints();
+        invalidate();
+    }
 
     @Override
     protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec ) {
@@ -75,7 +83,6 @@ public class BoardView extends View {
 
     @Override
     protected void onDraw(Canvas canvas){
-
         /* grid is only used while in development for debugging */
         canvas.drawRect(_rect, _paint);
         for ( int row = 0; row < NUM_CELLS; ++row ) {
@@ -95,6 +102,38 @@ public class BoardView extends View {
         }
 
     }
+
+    @Override
+    public boolean onTouchEvent( MotionEvent event ) {
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+
+        int col = xToCol(x);
+        int row = yToRow(y);
+
+        if(event.getAction() == MotionEvent.ACTION_DOWN){
+            for(Point p : _pointSet){
+                if(p.getCircle().contains(x, y)){
+                    /* USER HAS CLICKED ON THIS CIRCLE */
+                    _isMoving = true;
+                    _selectedPoint = p;
+
+                    Log.d("PlayGameActivity", "*********************************************************");
+                    Log.d("PlayGameActivity", "COLUMN  " + Integer.toString(_selectedPoint.getCol()));
+                    Log.d("PlayGameActivity", "ROW  " + Integer.toString(_selectedPoint.getRow()));
+                    Log.d("PlayGameActivity", "COLOR  " + Integer.toString(_selectedPoint.getColor()));
+                    Log.d("PlayGameActivity", "*********************************************************");
+                    
+                }
+            }
+        } else if (event.getAction() == MotionEvent.ACTION_UP){
+            _selectedPoint = null;
+            _isMoving = false;
+        }
+
+        return true;
+    }
+
 
 
     /***************************************************************************************/
