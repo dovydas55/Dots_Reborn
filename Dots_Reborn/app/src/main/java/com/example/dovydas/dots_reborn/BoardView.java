@@ -27,7 +27,8 @@ public class BoardView extends View {
     private ArrayList<Point> _adjacentPoints;
 
     private HashMap<Integer, String> _colorMap;
-    private boolean _isMoving;
+    private boolean _isMoving = false;
+    private boolean _isMatch = false;
     private Point _selectedPoint;
 
     /* for drawing grid on the canvas */
@@ -48,12 +49,8 @@ public class BoardView extends View {
         _paint.setAntiAlias(true);
         /* ********************* */
 
-
-        _pointSet = new ArrayList<>();
         _adjacentPoints = new ArrayList<>();
-
         _colorMap = new HashMap<>();
-        _isMoving = false;
         _selectedPoint = null;
 
         initializeColorMap();
@@ -118,15 +115,15 @@ public class BoardView extends View {
         int y = (int) event.getY();
 
         if(event.getAction() == MotionEvent.ACTION_DOWN){
-            for(Point p : _pointSet){
-                if(p.getCircle().contains(x, y)){
+            for(int i = 0; i < _pointSet.size(); i++){
+                if(_pointSet.get(i).getCircle().contains(x, y)){
                     /* USER HAS CLICKED ON THIS CIRCLE */
                     _isMoving = true;
-                    p.setMarked(true);
-                    _selectedPoint = p;
+                    _pointSet.get(i).setMarked(true);
+                    _selectedPoint = _pointSet.get(i);
                     _adjacentPoints = findAdjacentPoints();
 
-
+                    /*
                     Log.d("PlayGameActivity", "*********************************************************");
                     Log.d("PlayGameActivity", "COLUMN , ROW (x, y) " + Integer.toString(_selectedPoint.getCol()) + "  " + Integer.toString(_selectedPoint.getRow()) );
                     Log.d("PlayGameActivity", "-- Printing out adjacent points --");
@@ -135,18 +132,43 @@ public class BoardView extends View {
                         Log.d("PlayGameActivity", "COLUMN , ROW (x, y) " + Integer.toString(i.getCol()) + "  " + Integer.toString(i.getRow()) );
                     }
                     Log.d("PlayGameActivity", "*********************************************************");
+                    */
 
                 }
             }
         } else if(event.getAction() == MotionEvent.ACTION_MOVE){
             if(_isMoving){
-                    /* DO something */
+                for(int i = 0; i < _adjacentPoints.size(); i++){
+                    if(_adjacentPoints.get(i).getCircle().contains(x,y) && _adjacentPoints.get(i).getColor() == _selectedPoint.getColor() && !_adjacentPoints.get(i).getMarked()){
+                        /* match */
+                        _isMatch = true;
+                        _adjacentPoints.get(i).setMarked(true);
+                        _selectedPoint = _adjacentPoints.get(i);
+                        _adjacentPoints = findAdjacentPoints(); /* find new adjacent points */
+                    }
+                }
+
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP){
             _isMoving = false;
             _adjacentPoints.clear();
-            Log.d("PlayGameActivity", "Adjacent point array have been cleared: " + Integer.toString(_adjacentPoints.size()));
-            Log.d("PlayGameActivity", "*********************************************************");
+            if(_isMatch){
+                /* remove all marked points */
+                for(int i = 0; i < _pointSet.size(); i++){
+                    if(_pointSet.get(i).getMarked() == true){
+                        _pointSet.remove(i);
+                        i--;
+                    }
+                }
+            } else {
+                for(int i = 0; i < _pointSet.size(); i++){
+                    _pointSet.get(i).setMarked(false);
+                }
+            }
+
+            _isMatch = false;
+            invalidate();
+
 
         }
 
@@ -194,6 +216,7 @@ public class BoardView extends View {
 
     private void initializePoints(){
         /* initially color set is 0 - 5 */
+        _pointSet = new ArrayList<>();
         Random rand = new Random();
         for(int i = 0; i < NUM_CELLS; i++){
             for(int j = 0; j < NUM_CELLS; j++){
