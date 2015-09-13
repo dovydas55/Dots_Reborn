@@ -3,52 +3,46 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.dovydas.dots_reborn.IntermediateHighscoreActivity">
+    tools:context="com.example.dovydas.dots_reborn.IntermediateHighscoreActivity"
+    android:id="@+id/highScoreSelect">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_mode"
+            android:textSize="30dp" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/highScoreIcons"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
+        android:gravity="center"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
+        <com.example.dovydas.dots_reborn.SquareIcon
+            android:src="@drawable/ic_moves"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="left"
-                android:paddingLeft="15sp"
-                android:id="@+id/timeMode"
-                android:textSize="50sp"
-                android:onClick="showTimeHighScore"
-                android:text="@string/time_mode"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
+            android:id="@+id/highScoreMoveMode"
+            android:onClick="showMoveHighScore"/>
+        <com.example.dovydas.dots_reborn.SquareIcon
+            android:src="@drawable/ic_timed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="right"
-                android:textSize="50sp"
-                android:id="@+id/moveMode"
-                android:paddingRight="15sp"
-                android:onClick="showMoveHighScore"
-                android:text="@string/move_mode"/>
-        </LinearLayout>
-
+            android:gravity="center"
+            android:id="@+id/highScoreTimeMode"
+            android:onClick="showTimeHighScore"/>
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="fill_parent"
