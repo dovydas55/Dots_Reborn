@@ -24,17 +24,16 @@ public class BoardView extends View {
     private int _cellWidth;
     private int _cellHeight;
     private ArrayList<Point> _pointSet;
-    private ArrayList<Point> _matchedPoints;
+    private ArrayList<Point> _adjacentPoints;
 
     private HashMap<Integer, String> _colorMap;
     private boolean _isMoving;
     private Point _selectedPoint;
-    private Point _firstContact;
-    private boolean _isMatch = false;
 
-
+    /* for drawing grid on the canvas */
     private Rect _rect = new Rect();
     private Paint _paint = new Paint();
+    /* ****************************** */
 
     private int NUM_CELLS = 6; /* default board size */
 
@@ -42,19 +41,20 @@ public class BoardView extends View {
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        /* grid style parameters */
         _paint.setColor(Color.RED);
         _paint.setStyle(Paint.Style.STROKE);
         _paint.setStrokeWidth(2);
         _paint.setAntiAlias(true);
+        /* ********************* */
+
 
         _pointSet = new ArrayList<>();
-        _matchedPoints = new ArrayList<>();
+        _adjacentPoints = new ArrayList<>();
 
         _colorMap = new HashMap<>();
         _isMoving = false;
         _selectedPoint = null;
-        _firstContact = null;
-        _isMatch = false;
 
         initializeColorMap();
     }
@@ -65,6 +65,7 @@ public class BoardView extends View {
         invalidate();
     }
 
+
     @Override
     protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec ) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -74,7 +75,6 @@ public class BoardView extends View {
         int size = Math.min(width, height);
         setMeasuredDimension(size + getPaddingLeft() + getPaddingRight(),
                 size + getPaddingTop() + getPaddingBottom());
-
 
     }
 
@@ -105,6 +105,7 @@ public class BoardView extends View {
         /* ********************************************************* */
 
 
+        /* draw points on canvas */
         for(Point point : _pointSet){
             canvas.drawOval(point.getCircle(), point.getPaint()); /* draw all points */
         }
@@ -121,53 +122,32 @@ public class BoardView extends View {
                 if(p.getCircle().contains(x, y)){
                     /* USER HAS CLICKED ON THIS CIRCLE */
                     _isMoving = true;
+                    p.setMarked(true);
                     _selectedPoint = p;
-                    _firstContact = p;
-                    _matchedPoints.add(p); /* adding very first point of the sequence */
+                    _adjacentPoints = findAdjacentPoints();
+
 
                     Log.d("PlayGameActivity", "*********************************************************");
-                    Log.d("PlayGameActivity", "COLUMN  " + Integer.toString(_selectedPoint.getCol()));
-                    Log.d("PlayGameActivity", "ROW  " + Integer.toString(_selectedPoint.getRow()));
-                    Log.d("PlayGameActivity", "COLOR  " + Integer.toString(_selectedPoint.getColor()));
+                    Log.d("PlayGameActivity", "COLUMN , ROW (x, y) " + Integer.toString(_selectedPoint.getCol()) + "  " + Integer.toString(_selectedPoint.getRow()) );
+                    Log.d("PlayGameActivity", "-- Printing out adjacent points --");
+                    Log.d("PlayGameActivity", "NUMBER OF ADJACENT POINTS: " + Integer.toString(_adjacentPoints.size()));
+                    for(Point i : _adjacentPoints){
+                        Log.d("PlayGameActivity", "COLUMN , ROW (x, y) " + Integer.toString(i.getCol()) + "  " + Integer.toString(i.getRow()) );
+                    }
                     Log.d("PlayGameActivity", "*********************************************************");
 
                 }
             }
         } else if(event.getAction() == MotionEvent.ACTION_MOVE){
             if(_isMoving){
-                    for(int i = 0; i < _pointSet.size(); i++) {
-                        if (_pointSet.get(i).getColor() == _selectedPoint.getColor() && adjacentPoint(_pointSet.get(i))) {
-
-                            _selectedPoint = _pointSet.get(i);
-                            _matchedPoints.add(_pointSet.get(i)); /* still need to add first point */
-                            _isMatch = true;
-                            _pointSet.remove(i);
-
-                            //Log.d("PlayGameActivity", "*************************** MATCH ******************************");
-                            //Log.d("PlayGameActivity", "COLUMN (prev - cur)  " + Integer.toString(_firstPointInSequence.getCol()) + "  <-->  " + Integer.toString(_selectedPoint.getCol()));
-                            //Log.d("PlayGameActivity", "ROW (prev - cur)  " + Integer.toString(_firstPointInSequence.getRow()) + "  <-->  " + Integer.toString(_selectedPoint.getRow()));
-                            //Log.d("PlayGameActivity", "COLOR (prev - cur)  " + Integer.toString(_prevPoint.getColor()) + "  <-->  " + Integer.toString(_selectedPoint.getColor()));
-                            //Log.d("PlayGameActivity", "****************************************************************");
-
-                        }
-                    }
+                    /* DO something */
             }
         } else if (event.getAction() == MotionEvent.ACTION_UP){
-            _selectedPoint = null;
             _isMoving = false;
-            if(_isMatch){
-                for(int i = 0; i < _pointSet.size(); i++){
-                    if(_firstContact.getRow() == _pointSet.get(i).getRow() && _firstContact.getCol() == _pointSet.get(i).getCol()){
-                        _pointSet.remove(i);
-                    }
-                }
-                _isMatch = false;
-            }
+            _adjacentPoints.clear();
+            Log.d("PlayGameActivity", "Adjacent point array have been cleared: " + Integer.toString(_adjacentPoints.size()));
+            Log.d("PlayGameActivity", "*********************************************************");
 
-            invalidate(); /* delete matched points */
-            /********************/
-            _matchedPoints.clear(); /* for now just delete all matched points */
-            /********************/
         }
 
         return true;
@@ -179,6 +159,16 @@ public class BoardView extends View {
     /********************************* PRIVATE METHODS *************************************/
     /***************************************************************************************/
 
+    private ArrayList<Point> findAdjacentPoints(){
+        ArrayList<Point> arr = new ArrayList<>();
+        for(Point p : _pointSet){
+            if(adjacentPoint(p) && !p.getMarked()){
+                arr.add(p);
+            }
+        }
+        return arr;
+    }
+
     private boolean adjacentPoint(Point p){
         if(_selectedPoint.getRow() == p.getRow()){
             if(_selectedPoint.getCol() + 1 == p.getCol()) {
@@ -186,6 +176,8 @@ public class BoardView extends View {
             }
             else if(_selectedPoint.getCol() - 1 == p.getCol()) {
                 return true;
+            } else {
+                return false;
             }
         } else if(_selectedPoint.getCol() == p.getCol()){
             if(_selectedPoint.getRow() + 1 == p.getRow()) {
@@ -193,6 +185,8 @@ public class BoardView extends View {
             }
             else if(_selectedPoint.getRow() - 1 == p.getRow()) {
                 return true;
+            } else {
+                return false;
             }
         }
         return false;
@@ -204,7 +198,7 @@ public class BoardView extends View {
         for(int i = 0; i < NUM_CELLS; i++){
             for(int j = 0; j < NUM_CELLS; j++){
                 int color = rand.nextInt(6); /* General formula rand.nextInt((max - min) + 1) + min;*/
-                _pointSet.add(new Point(i, j, color, createPaintBrush(color), createCircle(i, j)));
+                _pointSet.add(new Point(j, i, color, createPaintBrush(color), createCircle(j, i), false));
             }
         }
     }

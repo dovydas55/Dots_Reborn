@@ -17,12 +17,13 @@ public class Point {
     private Paint _paint;
 
 
-    public Point(int row, int col, int color, Paint paint, RectF circle){
+    public Point(int row, int col, int color, Paint paint, RectF circle, boolean match){
         _row = row;
         _col = col;
         _color = color;
         _circle = circle;
         _paint = paint;
+        _marked = match;
     }
 
     public RectF getCircle(){
@@ -60,6 +61,7 @@ public class Point {
     public void setMarked(boolean marked){
         _marked = marked;
     }
+
 
     public double getX(){
         return _x;

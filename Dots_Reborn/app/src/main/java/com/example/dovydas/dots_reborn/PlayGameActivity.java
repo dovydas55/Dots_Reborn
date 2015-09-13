@@ -16,6 +16,7 @@ public class PlayGameActivity extends AppCompatActivity {
     private TextView _displayScore;
     private TextView _displayTimeOrMoves;
     private int _secondsLeft;
+    private BoardView _gameBoard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class PlayGameActivity extends AppCompatActivity {
 
         _displayScore = (TextView) findViewById(R.id.play_display_score);
         _displayTimeOrMoves = (TextView) findViewById(R.id.play_display_time_or_moves);
+        _gameBoard = (BoardView) findViewById(R.id.gameCanvas);
 
         ActionBar action = getSupportActionBar();
         action.setDisplayShowHomeEnabled(true);
