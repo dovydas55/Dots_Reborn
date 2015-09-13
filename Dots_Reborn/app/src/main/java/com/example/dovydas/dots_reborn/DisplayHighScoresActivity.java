@@ -40,6 +40,12 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
 
         _boardSizeSpinner = (Spinner) findViewById(R.id.boardSize);
         _listView = (ListView) findViewById(R.id.records);
+
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.highscore_menu, R.layout.spinner_layout);
+        spinnerAdapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
+        _boardSizeSpinner.setAdapter(spinnerAdapter);
+
         _boardSizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -68,7 +74,7 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
     }
 
     private void init(){
-        for(int i = 30; i > 0; i--){
+        for(int i = 10; i > 0; i--){
             _data.add(new Record(i*4, new Date()));
         }
         _adapter.notifyDataSetChanged();

@@ -3,4 +3,5 @@
     <color name="dovydark">#191919</color>
     <color name="gunnhildurlight">#FFFEFC</color>
     <color name="danger_red">#DF3E3E</color>
+    <color name="danger_red_pressed">#B23232</color>
 </resources>
