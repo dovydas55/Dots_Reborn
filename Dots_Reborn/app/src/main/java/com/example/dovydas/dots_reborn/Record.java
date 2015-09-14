@@ -12,9 +12,25 @@ public class Record implements Serializable {
     private int _score;
     private Date _time;
 
+    private String _db_score;
+    private String _db_time;
+
     public Record(int score, Date time){
         _score = score;
         _time = time;
+    }
+
+    public Record(String score, String time){
+        this._db_score = score;
+        this._db_time = time;
+    }
+
+    public String getDBscore(){
+        return _db_score;
+    }
+
+    public String getDBtime(){
+        return _db_time;
     }
 
     public String getHighScore(){
@@ -29,6 +45,17 @@ public class Record implements Serializable {
     @Override
     public String toString() {
         return _score + "  " + _time;
+    }
+
+    /* defining score table in database */
+    public static abstract class User_HighScores{
+        /* columns*/
+        public static final String USER_SCORE = "user_score";
+        public static final String USER_DATE = "user_date";
+
+        /* table name */
+        public static final String TABLE_NAME = "high_scores";
+
     }
 
 }

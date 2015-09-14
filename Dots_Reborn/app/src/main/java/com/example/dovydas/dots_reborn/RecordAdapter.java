@@ -37,10 +37,10 @@ public class RecordAdapter extends ArrayAdapter<Record> {
         rankView.setText( Integer.toString(position + 1)); /* think of the better war for displaying RANK*/
 
         TextView scoreView = (TextView) rowView.findViewById(R.id.row_best_score);
-        scoreView.setText( values.get(position).getHighScore() );
+        scoreView.setText( values.get(position).getDBscore() );
 
         TextView timeView = (TextView) rowView.findViewById(R.id.row_time);
-        timeView.setText( values.get(position).getTime() );
+        timeView.setText( values.get(position).getDBtime() );
 
 
         return rowView;

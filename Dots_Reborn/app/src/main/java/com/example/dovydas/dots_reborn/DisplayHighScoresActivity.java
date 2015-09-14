@@ -1,6 +1,8 @@
 package com.example.dovydas.dots_reborn;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +27,9 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
     private ListView _listView;
     private RecordAdapter _adapter;
     private ArrayList<Record> _data;
+    private SQLiteDatabase _sqLiteDatabase;
+    private UserDbHelper _userDbHelper;
+    private Cursor _cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +64,13 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
 
         });
 
-        _data = new ArrayList<Record>();
+        _data = new ArrayList<>();
         _adapter = new RecordAdapter(this, _data);
         _listView.setAdapter(_adapter);
 
+
         /* fill mock data */
-        init();
+        //init();
 
         ActionBar action = getSupportActionBar();
         action.setDisplayShowHomeEnabled(true);
@@ -72,6 +78,14 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
         action.setDisplayUseLogoEnabled(true);
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        readRecords();
+        _adapter.notifyDataSetChanged();
+    }
+
 
     private void init(){
         for(int i = 10; i > 0; i--){
@@ -108,4 +122,21 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
         //TODO: clear history
         Toast.makeText(getApplicationContext(), "TODO: clear history for " + _selectedBoardSize, Toast.LENGTH_SHORT).show();
     }
+
+    private void readRecords(){
+        _userDbHelper = new UserDbHelper(getApplicationContext());
+        _sqLiteDatabase = _userDbHelper.getReadableDatabase();
+        _cursor = _userDbHelper.getInformations(_sqLiteDatabase);
+        if(_cursor.moveToFirst()){
+            do {
+                String score, date;
+                score = _cursor.getString(0); /* column index */
+                date = _cursor.getString(1);
+                _data.add(new Record(score, date));
+
+            } while(_cursor.moveToNext());
+        }
+    }
+
+
 }

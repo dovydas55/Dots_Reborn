@@ -1,19 +1,28 @@
 package com.example.dovydas.dots_reborn;
 
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Date;
 
 public class EndGameActivity extends AppCompatActivity {
 
     public final static String GAME_MODE = "com.example.dovydas.dots_reborn.GAME_MODE";
     private TextView _finalScore;
     private int _userScore;
+
+    private Context context = this;
+    private UserDbHelper userDbHelper;
+    private SQLiteDatabase sqLiteDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +32,8 @@ public class EndGameActivity extends AppCompatActivity {
         Intent intent = getIntent();
         _userScore = Integer.parseInt(intent.getStringExtra(PlayGameActivity.FINAL_SCORE));
         _finalScore = (TextView) findViewById(R.id.final_game_score);
+
+        addScoreToDb();
 
     }
 
@@ -92,4 +103,14 @@ public class EndGameActivity extends AppCompatActivity {
         });
         animator.start();
     }
+
+    private void addScoreToDb(){
+        Record rec = new Record(_userScore, new Date());
+        userDbHelper = new UserDbHelper(context);
+        sqLiteDatabase = userDbHelper.getWritableDatabase();
+        userDbHelper.addInformations(rec.getHighScore(), rec.getTime(), sqLiteDatabase);
+        Toast.makeText(getBaseContext(), "Data saved", Toast.LENGTH_LONG).show();
+        userDbHelper.close();
+    }
+
 }
