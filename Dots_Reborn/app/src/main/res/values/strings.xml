@@ -26,5 +26,10 @@
     <string name="display_score">Score: </string>
 
     <string name="shuffle_board">Shuffle!</string>
+    <string name="title_activity_end_game">EndGameActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+
+    <string name="final_score">You\'re Score</string>
 
 </resources>

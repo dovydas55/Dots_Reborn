@@ -17,6 +17,7 @@ public class PlayGameActivity extends AppCompatActivity {
     private TextView _displayScore;
     private TextView _displayTimeOrMoves;
     private int _secondsLeft;
+    private int _gameScore = 0;
     private BoardView _gameBoard;
 
     @Override
@@ -32,9 +33,19 @@ public class PlayGameActivity extends AppCompatActivity {
 
         _displayScore = (TextView) findViewById(R.id.play_display_score);
         _displayTimeOrMoves = (TextView) findViewById(R.id.play_display_time_or_moves);
-        _gameBoard = (BoardView) findViewById(R.id.gameCanvas);
 
-        _gameBoard.setScoreView((TextView)findViewById(R.id.play_display_score));
+        updateScore(); /* initializing score */
+
+
+        _gameBoard = (BoardView) findViewById(R.id.gameCanvas);
+        _gameBoard.setGeneralHandler(new GeneralEventHandler() {
+            @Override
+            public void onUpdateScore() {
+                _gameScore += 1;
+                updateScore();
+            }
+        });
+
         _gameBoard.setMovesOrTime((TextView)findViewById(R.id.play_display_time_or_moves), _gameMode);
 
         ActionBar action = getSupportActionBar();
@@ -74,5 +85,9 @@ public class PlayGameActivity extends AppCompatActivity {
 
     public void shuffleBoard(View v){
         _gameBoard.shuffleBoard();
+    }
+
+    private void updateScore(){
+        _displayScore.setText("Score " + Integer.toString(_gameScore));
     }
 }

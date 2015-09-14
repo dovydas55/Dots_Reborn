@@ -35,7 +35,6 @@ public class BoardView extends View {
     private boolean _isMoving = false;
     private boolean _isMatch = false;
     private Point _selectedPoint;
-    private int _gameScore = 0;
     private TextView _displayScore;
     private TextView _displayTimeOrMoves;
     private String _gameMode;
@@ -53,6 +52,7 @@ public class BoardView extends View {
     private Paint _paint = new Paint();
     /* ****************************** */
 
+    private GeneralEventHandler _eventHandler = null;
     private int NUM_CELLS = 6; /* default board size */
 
     public BoardView(Context context, AttributeSet attrs) {
@@ -154,7 +154,7 @@ public class BoardView extends View {
                     _selectedPoint = _pointSet.get(i);
                     _adjacentPoints = findAdjacentPoints();
 
-                    _paintPath = createCustomPaint(_selectedPoint);
+                    _paintPath = createCustomPathPaint(_selectedPoint);
                     _cellPath.add( new Point(xToCol(x), yToRow(y)) );
 
                 }
@@ -194,7 +194,11 @@ public class BoardView extends View {
                     if(_pointSet.get(i).getMarked() == true){
                         _pointSet.remove(i);
                         i--;
-                        updateScore();
+                        //updateScore();
+                        if(_eventHandler != null){
+                            _eventHandler.onUpdateScore();
+                        }
+
                     }
                 }
                 if(_gameMode.equals("Move mode")){
@@ -216,13 +220,6 @@ public class BoardView extends View {
     }
 
 
-    /* init score */
-    public void setScoreView(TextView v){
-        _displayScore = v;
-        _gameScore = -1;
-        updateScore();
-    }
-
     public void setMovesOrTime(TextView v, String mode){
         _displayTimeOrMoves = v;
         _gameMode = mode;
@@ -233,6 +230,10 @@ public class BoardView extends View {
         } else if(_gameMode.equals("Time mode")){
             startTimeCounter();
         }
+    }
+
+    public void setGeneralHandler(GeneralEventHandler geh){
+        _eventHandler = geh;
     }
 
 
@@ -348,12 +349,8 @@ public class BoardView extends View {
 
     }
 
-    private void updateScore(){
-        _gameScore += 1;
-        _displayScore.setText("Score: " + Integer.toString(_gameScore));
-    }
-
-    private Paint createCustomPaint(Point p){
+    /* custom paint for path */
+    private Paint createCustomPathPaint(Point p){
         Paint paint = new Paint();
         paint.setColor(Color.parseColor(_colorMap.get(p.getColor())));
         paint.setStrokeWidth(15.0f);
@@ -364,9 +361,6 @@ public class BoardView extends View {
         return paint;
     }
 
-    private void resetScore(){
-        _gameScore = 0;
-    }
 
     /***************************************************************************************/
 

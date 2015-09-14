@@ -7,8 +7,8 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:logo="@mipmap/ic_launcher"
         android:label=""
+        android:logo="@mipmap/ic_launcher"
         android:theme="@style/Dovy" >
         <activity
             android:name=".MainActivity"
@@ -25,19 +25,23 @@
         </activity>
         <activity
             android:name=".IntermediateHighscoreActivity"
-            android:icon="@drawable/ic_scores">
+            android:icon="@drawable/ic_scores" >
         </activity>
         <activity
             android:name=".DisplayHighScoresActivity"
-            android:icon="@drawable/ic_scores">
+            android:icon="@drawable/ic_scores" >
         </activity>
         <activity
             android:name=".StartGameOptionsActivity"
-            android:icon="@drawable/ic_options">
+            android:icon="@drawable/ic_options" >
         </activity>
         <activity
             android:name=".PlayGameActivity"
-            android:icon="@drawable/ic_timed">
+            android:icon="@drawable/ic_timed" >
+        </activity>
+        <activity
+            android:name=".EndGameActivity"
+            android:label="@string/title_activity_end_game" >
         </activity>
     </application>
 
