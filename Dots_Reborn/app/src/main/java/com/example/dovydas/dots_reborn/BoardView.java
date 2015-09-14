@@ -172,7 +172,7 @@ public class BoardView extends View {
 
             _isMatch = false;
             invalidate();
-            
+
         }
 
         return true;
