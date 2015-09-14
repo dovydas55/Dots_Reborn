@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -35,6 +36,11 @@ public class BoardView extends View {
     private Point _selectedPoint;
     private int _gameScore = 0;
     private TextView _displayScore;
+    private TextView _displayTimeOrMoves;
+    private String _gameMode;
+
+    private int _secondsLeft = 0;
+    private int _movesLeft;
 
     /* for drawing grid on the canvas */
     private Rect _rect = new Rect();
@@ -155,6 +161,9 @@ public class BoardView extends View {
                         updateScore();
                     }
                 }
+                if(_gameMode.equals("Move mode")){
+                    decrementMoveCounter();
+                }
             } else {
                 for(int i = 0; i < _pointSet.size(); i++){
                     _pointSet.get(i).setMarked(false);
@@ -163,8 +172,7 @@ public class BoardView extends View {
 
             _isMatch = false;
             invalidate();
-
-
+            
         }
 
         return true;
@@ -174,10 +182,21 @@ public class BoardView extends View {
     /* init score */
     public void setScoreView(TextView v){
         _displayScore = v;
-        _gameScore = 0;
-        _displayScore.setText("Score: " + Integer.toString(_gameScore));
+        _gameScore = -1;
+        updateScore();
     }
 
+    public void setMovesOrTime(TextView v, String mode){
+        _displayTimeOrMoves = v;
+        _gameMode = mode;
+
+        if(_gameMode.equals("Move mode")){
+            _movesLeft = 31;
+            decrementMoveCounter();
+        } else if(_gameMode.equals("Time mode")){
+            startTimeCounter();
+        }
+    }
 
 
     /***************************************************************************************/
@@ -266,6 +285,29 @@ public class BoardView extends View {
         _colorMap.put(3, "#FF00FF");
         _colorMap.put(4, "#993333");
         _colorMap.put(5, "#006666");
+
+    }
+
+    private void decrementMoveCounter(){
+        _movesLeft -= 1;
+        _displayTimeOrMoves.setText("Moves " + Integer.toString(_movesLeft));
+    }
+
+    /* initialize and start time countdown */
+    private void startTimeCounter(){
+        new CountDownTimer(30000, 100) {
+            public void onTick(long ms) {
+                if (Math.round((float)ms / 1000.0f) != _secondsLeft)
+                {
+                    _secondsLeft = Math.round((float)ms / 1000.0f);
+                    _displayTimeOrMoves.setText("Time " + _secondsLeft );
+                }
+            }
+
+            public void onFinish() {
+                _displayTimeOrMoves.setText("Time 0");
+            }
+        }.start();
 
     }
 

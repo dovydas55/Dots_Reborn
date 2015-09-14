@@ -35,31 +35,16 @@ public class PlayGameActivity extends AppCompatActivity {
         _gameBoard = (BoardView) findViewById(R.id.gameCanvas);
 
         _gameBoard.setScoreView((TextView)findViewById(R.id.play_display_score));
+        _gameBoard.setMovesOrTime((TextView)findViewById(R.id.play_display_time_or_moves), _gameMode);
 
         ActionBar action = getSupportActionBar();
         action.setDisplayShowHomeEnabled(true);
         action.setLogo(R.drawable.ic_moves);
         action.setDisplayUseLogoEnabled(true);
 
-        if(_gameMode.equals("Time mode")){
+        if(_gameMode.equals("Time mode")) {
             action.setLogo(R.drawable.ic_timed);
-
-            new CountDownTimer(30000, 100) {
-                public void onTick(long ms) {
-                    if (Math.round((float)ms / 1000.0f) != _secondsLeft)
-                    {
-                        _secondsLeft = Math.round((float)ms / 1000.0f);
-                        _displayTimeOrMoves.setText("Time " + _secondsLeft );
-                    }
-                }
-
-                public void onFinish() {
-                    _displayTimeOrMoves.setText("Time 0");
-                }
-            }.start();
         }
-
-
 
     }
 
