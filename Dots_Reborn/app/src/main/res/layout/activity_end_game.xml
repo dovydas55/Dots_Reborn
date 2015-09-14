@@ -15,14 +15,15 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/final_score"
-            android:textSize="35sp"/>
+            android:textSize="50sp"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:id="@+id/final_game_score"
             android:layout_weight="1"
             android:gravity="center"
             android:text="37"
-            android:textSize="65sp"/>
+            android:textSize="60sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -57,16 +58,19 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:onClick="goHome"
             android:src="@mipmap/ic_launcher"/>
         <com.example.dovydas.dots_reborn.SquareIcon
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:onClick="playMoves"
             android:src="@drawable/ic_moves"/>
         <com.example.dovydas.dots_reborn.SquareIcon
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:onClick="playTime"
             android:src="@drawable/ic_timed"/>
     </LinearLayout>
 

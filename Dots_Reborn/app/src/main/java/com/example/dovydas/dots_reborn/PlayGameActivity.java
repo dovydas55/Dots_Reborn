@@ -17,9 +17,10 @@ public class PlayGameActivity extends AppCompatActivity {
     private TextView _displayScore;
     private TextView _displayTimeOrMoves;
     private int _secondsLeft;
-    private int _movesLeft = 30;
+    private int _movesLeft = 5; /* MAKE SURE TO CHANGE IT BACK!!*/
     private int _gameScore = 0;
     private BoardView _gameBoard;
+    public final static String FINAL_SCORE = "com.example.dovydas.dots_reborn.FINAL_SCORE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,9 @@ public class PlayGameActivity extends AppCompatActivity {
         /* Extract game mode */
         Intent intent = getIntent();
         _gameMode = intent.getStringExtra(MainActivity.GAME_MODE);
+        if(_gameMode.isEmpty() || _gameMode == null){
+            _gameMode = intent.getStringExtra(EndGameActivity.GAME_MODE);
+        }
         Toast.makeText(getApplicationContext(), _gameMode, Toast.LENGTH_SHORT).show();
         /* *** *** *** *** *** */
 
@@ -53,7 +57,7 @@ public class PlayGameActivity extends AppCompatActivity {
         _gameBoard.setGeneralHandler(new GeneralEventHandler() {
             @Override
             public void onUpdateScore() {
-                _gameScore += 1;
+                _gameScore += 10;
                 updateScore();
             }
 
@@ -61,12 +65,14 @@ public class PlayGameActivity extends AppCompatActivity {
             public void onUpdateMove() {
                 _movesLeft -= 1;
                 updateMoves();
+                if(_movesLeft == 0){
+                    endGame();
+                }
             }
 
         });
 
     }
-    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,8 +124,14 @@ public class PlayGameActivity extends AppCompatActivity {
 
             public void onFinish() {
                 _displayTimeOrMoves.setText("Time 0");
+                endGame();
             }
         }.start();
+    }
 
+    private void endGame(){
+        Intent intent = new Intent(this, EndGameActivity.class);
+        intent.putExtra(FINAL_SCORE, Integer.toString(_gameScore));
+        startActivity(intent);
     }
 }
