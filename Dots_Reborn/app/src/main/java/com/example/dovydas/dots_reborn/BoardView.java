@@ -206,12 +206,9 @@ public class BoardView extends View {
                 }
             }
 
+            _paintPath = null;
             _isMatch = false;
             invalidate();
-
-
-            _selectedPoint = null;
-            _paintPath = null; /* removing reference to old paint for garbage collector */
 
         }
 
