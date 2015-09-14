@@ -35,12 +35,6 @@ public class BoardView extends View {
     private boolean _isMoving = false;
     private boolean _isMatch = false;
     private Point _selectedPoint;
-    private TextView _displayScore;
-    private TextView _displayTimeOrMoves;
-    private String _gameMode;
-
-    private int _secondsLeft = 0;
-    private int _movesLeft;
 
     /* member variables for displaying the path */
     private Path _path = new Path();
@@ -65,15 +59,14 @@ public class BoardView extends View {
         _paint.setAntiAlias(true);
         /* ********************* */
 
-
         _adjacentPoints = new ArrayList<>();
         _colorMap = new HashMap<>();
         _selectedPoint = null;
 
         initializeColorMap();
 
-
     }
+
 
     /* this function can be used for shuffeling the points */
     public void shuffleBoard(){
@@ -100,7 +93,7 @@ public class BoardView extends View {
         _cellWidth = boardWidth / NUM_CELLS;
         _cellHeight = boardHeight / NUM_CELLS;
 
-        initializePoints(); /* WHERE IS THE BEST PLACE TO CALL THIS? */
+        initializePoints(); /* think about is there a better place where i could place it? */
 
     }
 
@@ -194,15 +187,13 @@ public class BoardView extends View {
                     if(_pointSet.get(i).getMarked() == true){
                         _pointSet.remove(i);
                         i--;
-                        //updateScore();
                         if(_eventHandler != null){
                             _eventHandler.onUpdateScore();
                         }
-
                     }
                 }
-                if(_gameMode.equals("Move mode")){
-                    decrementMoveCounter();
+                if(_eventHandler != null){
+                    _eventHandler.onUpdateMove(); /* a move has been made by user */
                 }
             } else {
                 for(int i = 0; i < _pointSet.size(); i++){
@@ -220,21 +211,10 @@ public class BoardView extends View {
     }
 
 
-    public void setMovesOrTime(TextView v, String mode){
-        _displayTimeOrMoves = v;
-        _gameMode = mode;
-
-        if(_gameMode.equals("Move mode")){
-            _movesLeft = 31;
-            decrementMoveCounter();
-        } else if(_gameMode.equals("Time mode")){
-            startTimeCounter();
-        }
-    }
-
     public void setGeneralHandler(GeneralEventHandler geh){
         _eventHandler = geh;
     }
+
 
 
     /***************************************************************************************/
@@ -326,29 +306,6 @@ public class BoardView extends View {
 
     }
 
-    private void decrementMoveCounter(){
-        _movesLeft -= 1;
-        _displayTimeOrMoves.setText("Moves " + Integer.toString(_movesLeft));
-    }
-
-    /* initialize and start time countdown */
-    private void startTimeCounter(){
-        new CountDownTimer(30000, 100) {
-            public void onTick(long ms) {
-                if (Math.round((float)ms / 1000.0f) != _secondsLeft)
-                {
-                    _secondsLeft = Math.round((float)ms / 1000.0f);
-                    _displayTimeOrMoves.setText("Time " + _secondsLeft );
-                }
-            }
-
-            public void onFinish() {
-                _displayTimeOrMoves.setText("Time 0");
-            }
-        }.start();
-
-    }
-
     /* custom paint for path */
     private Paint createCustomPathPaint(Point p){
         Paint paint = new Paint();
@@ -360,7 +317,6 @@ public class BoardView extends View {
         paint.setAntiAlias(true);
         return paint;
     }
-
 
     /***************************************************************************************/
 

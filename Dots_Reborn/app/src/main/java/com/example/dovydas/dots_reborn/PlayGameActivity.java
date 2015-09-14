@@ -17,6 +17,7 @@ public class PlayGameActivity extends AppCompatActivity {
     private TextView _displayScore;
     private TextView _displayTimeOrMoves;
     private int _secondsLeft;
+    private int _movesLeft = 30;
     private int _gameScore = 0;
     private BoardView _gameBoard;
 
@@ -24,6 +25,11 @@ public class PlayGameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_game);
+
+        ActionBar action = getSupportActionBar();
+        action.setDisplayShowHomeEnabled(true);
+        action.setLogo(R.drawable.ic_moves);
+        action.setDisplayUseLogoEnabled(true);
 
         /* Extract game mode */
         Intent intent = getIntent();
@@ -33,31 +39,34 @@ public class PlayGameActivity extends AppCompatActivity {
 
         _displayScore = (TextView) findViewById(R.id.play_display_score);
         _displayTimeOrMoves = (TextView) findViewById(R.id.play_display_time_or_moves);
+        _gameBoard = (BoardView) findViewById(R.id.gameCanvas);
 
         updateScore(); /* initializing score */
+        if(_gameMode.equals("Move mode")){
+            updateMoves();
+        } else if(_gameMode.equals("Time mode")) {
+            startTimeCounter();
+            action.setLogo(R.drawable.ic_timed);
+        }
 
-
-        _gameBoard = (BoardView) findViewById(R.id.gameCanvas);
+        /* working with handlers */
         _gameBoard.setGeneralHandler(new GeneralEventHandler() {
             @Override
             public void onUpdateScore() {
                 _gameScore += 1;
                 updateScore();
             }
+
+            @Override
+            public void onUpdateMove() {
+                _movesLeft -= 1;
+                updateMoves();
+            }
+
         });
 
-        _gameBoard.setMovesOrTime((TextView)findViewById(R.id.play_display_time_or_moves), _gameMode);
-
-        ActionBar action = getSupportActionBar();
-        action.setDisplayShowHomeEnabled(true);
-        action.setLogo(R.drawable.ic_moves);
-        action.setDisplayUseLogoEnabled(true);
-
-        if(_gameMode.equals("Time mode")) {
-            action.setLogo(R.drawable.ic_timed);
-        }
-
     }
+    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,5 +98,28 @@ public class PlayGameActivity extends AppCompatActivity {
 
     private void updateScore(){
         _displayScore.setText("Score " + Integer.toString(_gameScore));
+    }
+
+    private void updateMoves(){
+        if(_gameMode.equals("Move mode")){
+            _displayTimeOrMoves.setText("Moves " + Integer.toString(_movesLeft));
+        }
+    }
+
+    private void startTimeCounter(){
+        new CountDownTimer(30000, 100) {
+            public void onTick(long ms) {
+                if (Math.round((float)ms / 1000.0f) != _secondsLeft)
+                {
+                    _secondsLeft = Math.round((float)ms / 1000.0f);
+                    _displayTimeOrMoves.setText("Time " + _secondsLeft );
+                }
+            }
+
+            public void onFinish() {
+                _displayTimeOrMoves.setText("Time 0");
+            }
+        }.start();
+
     }
 }
