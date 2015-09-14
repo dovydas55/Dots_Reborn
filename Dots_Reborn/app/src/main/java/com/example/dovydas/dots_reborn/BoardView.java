@@ -10,7 +10,10 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +33,8 @@ public class BoardView extends View {
     private boolean _isMoving = false;
     private boolean _isMatch = false;
     private Point _selectedPoint;
+    private int _gameScore = 0;
+    private TextView _displayScore;
 
     /* for drawing grid on the canvas */
     private Rect _rect = new Rect();
@@ -37,7 +42,6 @@ public class BoardView extends View {
     /* ****************************** */
 
     private int NUM_CELLS = 6; /* default board size */
-
 
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -54,14 +58,15 @@ public class BoardView extends View {
         _selectedPoint = null;
 
         initializeColorMap();
+
+
     }
 
     /* this function can be used for shuffeling the points */
-    public void schuffleBoard(){
+    public void shuffleBoard(){
         initializePoints();
         invalidate();
     }
-
 
     @Override
     protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec ) {
@@ -123,17 +128,6 @@ public class BoardView extends View {
                     _selectedPoint = _pointSet.get(i);
                     _adjacentPoints = findAdjacentPoints();
 
-                    /*
-                    Log.d("PlayGameActivity", "*********************************************************");
-                    Log.d("PlayGameActivity", "COLUMN , ROW (x, y) " + Integer.toString(_selectedPoint.getCol()) + "  " + Integer.toString(_selectedPoint.getRow()) );
-                    Log.d("PlayGameActivity", "-- Printing out adjacent points --");
-                    Log.d("PlayGameActivity", "NUMBER OF ADJACENT POINTS: " + Integer.toString(_adjacentPoints.size()));
-                    for(Point i : _adjacentPoints){
-                        Log.d("PlayGameActivity", "COLUMN , ROW (x, y) " + Integer.toString(i.getCol()) + "  " + Integer.toString(i.getRow()) );
-                    }
-                    Log.d("PlayGameActivity", "*********************************************************");
-                    */
-
                 }
             }
         } else if(event.getAction() == MotionEvent.ACTION_MOVE){
@@ -158,6 +152,7 @@ public class BoardView extends View {
                     if(_pointSet.get(i).getMarked() == true){
                         _pointSet.remove(i);
                         i--;
+                        updateScore();
                     }
                 }
             } else {
@@ -173,6 +168,14 @@ public class BoardView extends View {
         }
 
         return true;
+    }
+
+
+    /* init score */
+    public void setScoreView(TextView v){
+        _displayScore = v;
+        _gameScore = 0;
+        _displayScore.setText("Score: " + Integer.toString(_gameScore));
     }
 
 
@@ -264,6 +267,15 @@ public class BoardView extends View {
         _colorMap.put(4, "#993333");
         _colorMap.put(5, "#006666");
 
+    }
+
+    private void updateScore(){
+        _gameScore += 1;
+        _displayScore.setText("Score: " + Integer.toString(_gameScore));
+    }
+
+    private void resetScore(){
+        _gameScore = 0;
     }
 
     /***************************************************************************************/

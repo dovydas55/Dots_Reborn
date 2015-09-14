@@ -51,8 +51,7 @@
             android:id="@+id/play_display_score"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/display_score"/>
+            android:gravity="center" />
     </LinearLayout>
 
 

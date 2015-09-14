@@ -34,6 +34,8 @@ public class PlayGameActivity extends AppCompatActivity {
         _displayTimeOrMoves = (TextView) findViewById(R.id.play_display_time_or_moves);
         _gameBoard = (BoardView) findViewById(R.id.gameCanvas);
 
+        _gameBoard.setScoreView((TextView)findViewById(R.id.play_display_score));
+
         ActionBar action = getSupportActionBar();
         action.setDisplayShowHomeEnabled(true);
         action.setLogo(R.drawable.ic_moves);
@@ -56,6 +58,8 @@ public class PlayGameActivity extends AppCompatActivity {
                 }
             }.start();
         }
+
+
 
     }
 
@@ -84,6 +88,6 @@ public class PlayGameActivity extends AppCompatActivity {
     }
 
     public void shuffleBoard(View v){
-        _gameBoard.schuffleBoard();
+        _gameBoard.shuffleBoard();
     }
 }
