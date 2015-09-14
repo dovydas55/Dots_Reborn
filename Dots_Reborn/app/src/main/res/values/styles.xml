@@ -10,7 +10,7 @@
         <item name="android:textColor">@color/gunnhildurlight</item>
     </style>
 
-    <style name="Gunnhildur" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Gunnhildur" parent="Theme.AppCompat.Light">
         <item name="android:windowBackground">@color/gunnhildurlight</item>
         <item name="android:textColor">@color/dovydark</item>
     </style>

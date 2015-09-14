@@ -4,4 +4,13 @@
     <color name="gunnhildurlight">#FFFEFC</color>
     <color name="danger_red">#DF3E3E</color>
     <color name="danger_red_pressed">#B23232</color>
+
+    <!--colors on board-->
+    <color name="dot_color_0">#BA60BE</color>
+    <color name="dot_color_1">#668CD8</color>
+    <color name="dot_color_2">#57CEBF</color>
+    <color name="dot_color_3">#6AC65F</color>
+    <color name="dot_color_4">#E9D439</color>
+    <color name="dot_color_5">#D86660</color>
+
 </resources>
