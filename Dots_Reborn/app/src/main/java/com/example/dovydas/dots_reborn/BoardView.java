@@ -45,7 +45,7 @@ public class BoardView extends View {
 
     /* member variables for displaying the path */
     private Path _path = new Path();
-    private Paint _paintPath = new Paint();
+    private Paint _paintPath;
     private ArrayList<Point> _cellPath = new ArrayList<>();
     /* ************************** */
     /* for drawing grid on the canvas */
@@ -65,14 +65,6 @@ public class BoardView extends View {
         _paint.setAntiAlias(true);
         /* ********************* */
 
-        /* styling path */
-        _paintPath.setColor(Color.YELLOW);
-        _paintPath.setStrokeWidth(15.0f);
-        _paintPath.setStrokeJoin(Paint.Join.ROUND);
-        _paintPath.setStrokeCap(Paint.Cap.ROUND);
-        _paintPath.setStyle(Paint.Style.STROKE);
-        _paintPath.setAntiAlias(true);
-        /**/
 
         _adjacentPoints = new ArrayList<>();
         _colorMap = new HashMap<>();
@@ -162,6 +154,7 @@ public class BoardView extends View {
                     _selectedPoint = _pointSet.get(i);
                     _adjacentPoints = findAdjacentPoints();
 
+                    _paintPath = createCustomPaint(_selectedPoint);
                     _cellPath.add( new Point(xToCol(x), yToRow(y)) );
 
                 }
@@ -215,6 +208,10 @@ public class BoardView extends View {
 
             _isMatch = false;
             invalidate();
+
+
+            _selectedPoint = null;
+            _paintPath = null; /* removing reference to old paint for garbage collector */
 
         }
 
@@ -357,6 +354,17 @@ public class BoardView extends View {
     private void updateScore(){
         _gameScore += 1;
         _displayScore.setText("Score: " + Integer.toString(_gameScore));
+    }
+
+    private Paint createCustomPaint(Point p){
+        Paint paint = new Paint();
+        paint.setColor(Color.parseColor(_colorMap.get(p.getColor())));
+        paint.setStrokeWidth(15.0f);
+        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setAntiAlias(true);
+        return paint;
     }
 
     private void resetScore(){
