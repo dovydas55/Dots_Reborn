@@ -27,7 +27,7 @@
         android:id="@+id/gameCanvas"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:background="#A0E0A0"
+        android:background="@color/dovydark"
         android:layout_margin="30dp"
         android:padding="15dp"
         android:layout_gravity="center" />

@@ -18,12 +18,18 @@ public class Point {
 
 
     public Point(int row, int col, int color, Paint paint, RectF circle, boolean match){
-        _row = row;
-        _col = col;
-        _color = color;
-        _circle = circle;
-        _paint = paint;
-        _marked = match;
+        this._row = row;
+        this._col = col;
+        this._color = color;
+        this._circle = circle;
+        this._paint = paint;
+        this._marked = match;
+    }
+
+    /* Overloaded constructor */
+    public Point(int col, int row){
+        this._col = col;
+        this._row = row;
     }
 
     public RectF getCircle(){

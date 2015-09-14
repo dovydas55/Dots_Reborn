@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.CountDownTimer;
@@ -42,6 +43,11 @@ public class BoardView extends View {
     private int _secondsLeft = 0;
     private int _movesLeft;
 
+    /* member variables for displaying the path */
+    private Path _path = new Path();
+    private Paint _paintPath = new Paint();
+    private ArrayList<Point> _cellPath = new ArrayList<>();
+    /* ************************** */
     /* for drawing grid on the canvas */
     private Rect _rect = new Rect();
     private Paint _paint = new Paint();
@@ -58,6 +64,15 @@ public class BoardView extends View {
         _paint.setStrokeWidth(2);
         _paint.setAntiAlias(true);
         /* ********************* */
+
+        /* styling path */
+        _paintPath.setColor(Color.YELLOW);
+        _paintPath.setStrokeWidth(15.0f);
+        _paintPath.setStrokeJoin(Paint.Join.ROUND);
+        _paintPath.setStrokeCap(Paint.Cap.ROUND);
+        _paintPath.setStyle(Paint.Style.STROKE);
+        _paintPath.setAntiAlias(true);
+        /**/
 
         _adjacentPoints = new ArrayList<>();
         _colorMap = new HashMap<>();
@@ -100,6 +115,7 @@ public class BoardView extends View {
     @Override
     protected void onDraw(Canvas canvas){
         /* grid is only used while in development for debugging */
+        /*
         canvas.drawRect(_rect, _paint);
         for ( int row = 0; row < NUM_CELLS; ++row ) {
             for ( int col = 0; col < NUM_CELLS; ++col ) {
@@ -110,7 +126,19 @@ public class BoardView extends View {
                 canvas.drawRect( _rect, _paint );
             }
         }
+        */
         /* ********************************************************* */
+
+        if ( !_cellPath.isEmpty() ) {
+            _path.reset();
+            Point point = _cellPath.get(0);
+            _path.moveTo( colToX(point.getCol()) + _cellWidth / 2, rowToY(point.getRow()) + _cellHeight/2 );
+            for ( int i = 1; i < _cellPath.size(); ++i ) {
+                point = _cellPath.get(i);
+                _path.lineTo( colToX(point.getCol()) + _cellWidth / 2, rowToY(point.getRow()) + _cellHeight/2 );
+            }
+            canvas.drawPath(_path, _paintPath);
+        }
 
 
         /* draw points on canvas */
@@ -134,6 +162,8 @@ public class BoardView extends View {
                     _selectedPoint = _pointSet.get(i);
                     _adjacentPoints = findAdjacentPoints();
 
+                    _cellPath.add( new Point(xToCol(x), yToRow(y)) );
+
                 }
             }
         } else if(event.getAction() == MotionEvent.ACTION_MOVE){
@@ -145,6 +175,17 @@ public class BoardView extends View {
                         _adjacentPoints.get(i).setMarked(true);
                         _selectedPoint = _adjacentPoints.get(i);
                         _adjacentPoints = findAdjacentPoints(); /* find new adjacent points */
+
+                        /* adding point to the path */
+                        if ( !_cellPath.isEmpty( ) ) {
+                            int col = xToCol(x);
+                            int row = yToRow(y);
+                            Point last = _cellPath.get(_cellPath.size() - 1);
+                            if (col != last.getCol() || row != last.getRow()) {
+                                _cellPath.add(new Point(col, row));
+                            }
+                        }
+                        invalidate();
                     }
                 }
 
@@ -152,6 +193,8 @@ public class BoardView extends View {
         } else if (event.getAction() == MotionEvent.ACTION_UP){
             _isMoving = false;
             _adjacentPoints.clear();
+            _cellPath.clear();
+
             if(_isMatch){
                 /* remove all marked points */
                 for(int i = 0; i < _pointSet.size(); i++){
@@ -259,7 +302,7 @@ public class BoardView extends View {
     private RectF createCircle(int row, int col){
         RectF circle = new RectF();
         circle.set(0, 0, _cellWidth, _cellHeight);
-        circle.inset(_cellWidth * 0.2f, _cellHeight * 0.2f);
+        circle.inset(_cellWidth * 0.25f, _cellHeight * 0.25f);
 
         circle.offset(colToX(col), rowToY(row));
         return circle;

@@ -5,13 +5,30 @@
     android:orientation="vertical"
     tools:context="com.example.dovydas.dots_reborn.PlayGameActivity">
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/shuffle_board"
+            android:onClick="shuffleBoard"
+            android:gravity="center"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
 
     <com.example.dovydas.dots_reborn.BoardView
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="4"
-        android:background="#A0E0A0"
         android:id="@+id/gameCanvas"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:background="@color/dovydark"
+        android:padding="15dp"
         android:layout_gravity="center" />
 
 
@@ -33,8 +50,7 @@
             android:id="@+id/play_display_score"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/display_score"/>
+            android:gravity="center" />
     </LinearLayout>
 
 
