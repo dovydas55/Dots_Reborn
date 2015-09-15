@@ -15,18 +15,23 @@ public class UserDbHelper extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;
     private static final String CREATE_QUERY =
                                                 "CREATE TABLE " + Record.User_HighScores.TABLE_NAME + "(" + Record.User_HighScores.USER_SCORE + " TEXT," +
-                                                Record.User_HighScores.USER_DATE + " TEXT);";
-
+                                                                                                            Record.User_HighScores.USER_DATE + " TEXT," +
+                                                                                                            Record.User_HighScores.BOARD_SIZE + " TEXT," +
+                                                                                                            Record.User_HighScores.GAME_MODE + " TEXT);";
 
     public UserDbHelper(Context context){
         super(context,DATABASE_NAME, null, DATABASE_VERSION);
+        //context.deleteDatabase(DATABASE_NAME);
+        //Log.e("DATABASE OPERATIONS", "Database deleted");
         Log.e("DATABASE OPERATIONS", "Database created / opened");
     }
 
-    public Cursor getInformations(SQLiteDatabase db){
+    public Cursor getInformations(String size, String mode, SQLiteDatabase db){
         Cursor cursor;
         String [] projections  = {Record.User_HighScores.USER_SCORE, Record.User_HighScores.USER_DATE};
-        cursor = db.query(Record.User_HighScores.TABLE_NAME, projections, null,null,null,null,null);
+        String selection = Record.User_HighScores.BOARD_SIZE +"=? AND " + Record.User_HighScores.GAME_MODE +"=?";
+        String[] selection_args = {size, mode};
+        cursor = db.query(Record.User_HighScores.TABLE_NAME, projections, selection, selection_args,null,null,null);
         return cursor;
     }
 
@@ -37,10 +42,12 @@ public class UserDbHelper extends SQLiteOpenHelper{
 
     }
 
-    public void addInformations(String score, String date, SQLiteDatabase db){
+    public void addInformations(String score, String date, String size, String mode, SQLiteDatabase db){
         ContentValues contentValues = new ContentValues();
         contentValues.put(Record.User_HighScores.USER_SCORE, score);
         contentValues.put(Record.User_HighScores.USER_DATE, date);
+        contentValues.put(Record.User_HighScores.BOARD_SIZE, size);
+        contentValues.put(Record.User_HighScores.GAME_MODE, mode);
         db.insert(Record.User_HighScores.TABLE_NAME, null, contentValues);
         Log.e("DATABASE OPERATIONS", "One row inserted");
     }

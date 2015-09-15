@@ -20,7 +20,9 @@ public class PlayGameActivity extends AppCompatActivity {
     private int _movesLeft = 5; /* MAKE SURE TO CHANGE IT BACK!!*/
     private int _gameScore = 0;
     private BoardView _gameBoard;
+
     public final static String FINAL_SCORE = "com.example.dovydas.dots_reborn.FINAL_SCORE";
+    public final static String GAMEMODE = "com.example.dovydas.dots_reborn.GAME_MODE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +134,7 @@ public class PlayGameActivity extends AppCompatActivity {
     private void endGame(){
         Intent intent = new Intent(this, EndGameActivity.class);
         intent.putExtra(FINAL_SCORE, Integer.toString(_gameScore));
+        intent.putExtra(GAMEMODE, _gameMode);
         startActivity(intent);
     }
 }

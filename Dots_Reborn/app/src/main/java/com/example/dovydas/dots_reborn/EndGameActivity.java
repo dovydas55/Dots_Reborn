@@ -19,6 +19,7 @@ public class EndGameActivity extends AppCompatActivity {
     public final static String GAME_MODE = "com.example.dovydas.dots_reborn.GAME_MODE";
     private TextView _finalScore;
     private int _userScore;
+    private String _gameMode;
 
     private Context context = this;
     private UserDbHelper userDbHelper;
@@ -30,8 +31,10 @@ public class EndGameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_end_game);
 
         Intent intent = getIntent();
+
         _userScore = Integer.parseInt(intent.getStringExtra(PlayGameActivity.FINAL_SCORE));
         _finalScore = (TextView) findViewById(R.id.final_game_score);
+        _gameMode = intent.getStringExtra(PlayGameActivity.GAMEMODE);
 
         addScoreToDb();
 
@@ -105,10 +108,10 @@ public class EndGameActivity extends AppCompatActivity {
     }
 
     private void addScoreToDb(){
-        Record rec = new Record(_userScore, new Date());
+        Record rec = new Record(_userScore, new Date(), "6x6", _gameMode);
         userDbHelper = new UserDbHelper(context);
         sqLiteDatabase = userDbHelper.getWritableDatabase();
-        userDbHelper.addInformations(rec.getHighScore(), rec.getTime(), sqLiteDatabase);
+        userDbHelper.addInformations(rec.getHighScore(), rec.getTime(), rec.getBoardSize(), rec.getGameMode(), sqLiteDatabase);
         Toast.makeText(getBaseContext(), "Data saved", Toast.LENGTH_LONG).show();
         userDbHelper.close();
     }

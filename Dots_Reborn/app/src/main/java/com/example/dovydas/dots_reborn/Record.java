@@ -11,13 +11,18 @@ public class Record implements Serializable {
 
     private int _score;
     private Date _time;
+    private String _boardSize;
+    private String _gameMode;
 
     private String _db_score;
     private String _db_time;
 
-    public Record(int score, Date time){
-        _score = score;
-        _time = time;
+
+    public Record(int score, Date time, String boardSize, String gameMode){
+        this._score = score;
+        this._time = time;
+        this._boardSize = boardSize;
+        this._gameMode = gameMode;
     }
 
     public Record(String score, String time){
@@ -25,12 +30,23 @@ public class Record implements Serializable {
         this._db_time = time;
     }
 
+    /**************************/
     public String getDBscore(){
         return _db_score;
     }
 
     public String getDBtime(){
         return _db_time;
+    }
+    /**************************/
+
+
+    public String getBoardSize(){
+        return _boardSize;
+    }
+
+    public String getGameMode(){
+        return _gameMode;
     }
 
     public String getHighScore(){
@@ -52,6 +68,8 @@ public class Record implements Serializable {
         /* columns*/
         public static final String USER_SCORE = "user_score";
         public static final String USER_DATE = "user_date";
+        public static final String GAME_MODE = "game_mode";
+        public static final String BOARD_SIZE = "board_size";
 
         /* table name */
         public static final String TABLE_NAME = "high_scores";

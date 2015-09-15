@@ -87,13 +87,13 @@ public class IntermediateHighscoreActivity extends AppCompatActivity {
 
     public void showMoveHighScore(View v){
         Intent intent = new Intent(this, DisplayHighScoresActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, "Moves Mode High Scores");
+        intent.putExtra(EXTRA_MESSAGE, "Move mode"); /*Moves Mode High Scores*/
         startActivity(intent);
     }
 
     public void showTimeHighScore(View v){
         Intent intent = new Intent(this, DisplayHighScoresActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, "Timed Mode High Scores");
+        intent.putExtra(EXTRA_MESSAGE, "Time mode"); /*Timed Mode High Scores*/
         startActivity(intent);
     }
 

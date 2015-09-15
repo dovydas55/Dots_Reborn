@@ -22,7 +22,7 @@ import java.util.Date;
 public class DisplayHighScoresActivity extends AppCompatActivity {
 
     private Spinner _boardSizeSpinner;
-    private String _selectedBoardSize;
+    private String _selectedBoardSize = "6x6"; /*default board size*/
 
     private ListView _listView;
     private RecordAdapter _adapter;
@@ -30,6 +30,8 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
     private SQLiteDatabase _sqLiteDatabase;
     private UserDbHelper _userDbHelper;
     private Cursor _cursor;
+    private String _gameMode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +40,14 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
 
         // Get the message from the intent
         Intent intent = getIntent();
-        String message = intent.getStringExtra(IntermediateHighscoreActivity.EXTRA_MESSAGE);
+        _gameMode = intent.getStringExtra(IntermediateHighscoreActivity.EXTRA_MESSAGE);
         TextView title = (TextView) findViewById(R.id.highScoreTitle);
-        title.setText(message);
+        if(_gameMode.equals("Move mode")){
+            title.setText("Moves Mode High Scores");
+        } else if (_gameMode.equals("Time mode")){
+            title.setText("Timed Mode High Scores");
+        }
+
         ///////////
 
         _boardSizeSpinner = (Spinner) findViewById(R.id.boardSize);
@@ -55,6 +62,8 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 _selectedBoardSize = _boardSizeSpinner.getSelectedItem().toString();
+                readRecords();
+                _adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -86,13 +95,14 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
         _adapter.notifyDataSetChanged();
     }
 
-
+/*
     private void init(){
         for(int i = 10; i > 0; i--){
             _data.add(new Record(i*4, new Date()));
         }
         _adapter.notifyDataSetChanged();
     }
+*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -124,9 +134,10 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
     }
 
     private void readRecords(){
+        _data.clear();
         _userDbHelper = new UserDbHelper(getApplicationContext());
         _sqLiteDatabase = _userDbHelper.getReadableDatabase();
-        _cursor = _userDbHelper.getInformations(_sqLiteDatabase);
+        _cursor = _userDbHelper.getInformations(_selectedBoardSize, _gameMode, _sqLiteDatabase);
         if(_cursor.moveToFirst()){
             do {
                 String score, date;
