@@ -9,6 +9,12 @@ import android.util.Log;
 
 /**
  * Created by dovydas on 9/14/2015.
+ * This class is generally based on youtube tutorial series 'Android Studio Tutorial - 32' to 'Android Studio Tutorial - 36'
+ * https://www.youtube.com/watch?v=38DOncHIazs
+ * https://www.youtube.com/watch?v=ahE8bQRD4f0
+ * https://www.youtube.com/watch?v=V4FqE83K1n0
+ * https://www.youtube.com/watch?v=Im6oY8QSVHU
+ * https://www.youtube.com/watch?v=HSTt_M4bpBY
  */
 public class UserDbHelper extends SQLiteOpenHelper{
     private static final String DATABASE_NAME = "HIGH_SCORE.DB";
