@@ -13,8 +13,7 @@ import android.util.Log;
 public class UserDbHelper extends SQLiteOpenHelper{
     private static final String DATABASE_NAME = "HIGH_SCORE.DB";
     private static final int DATABASE_VERSION = 1;
-    private static final String CREATE_QUERY =
-                                                "CREATE TABLE " + Record.User_HighScores.TABLE_NAME + "(" + Record.User_HighScores.USER_SCORE + " TEXT," +
+    private static final String CREATE_QUERY = "CREATE TABLE " + Record.User_HighScores.TABLE_NAME + "(" + Record.User_HighScores.USER_SCORE + " TEXT," +
                                                                                                             Record.User_HighScores.USER_DATE + " TEXT," +
                                                                                                             Record.User_HighScores.BOARD_SIZE + " TEXT," +
                                                                                                             Record.User_HighScores.GAME_MODE + " TEXT);";
@@ -31,7 +30,7 @@ public class UserDbHelper extends SQLiteOpenHelper{
         String [] projections  = {Record.User_HighScores.USER_SCORE, Record.User_HighScores.USER_DATE};
         String selection = Record.User_HighScores.BOARD_SIZE +"=? AND " + Record.User_HighScores.GAME_MODE +"=?";
         String[] selection_args = {size, mode};
-        cursor = db.query(Record.User_HighScores.TABLE_NAME, projections, selection, selection_args,null,null,null);
+        cursor = db.query(Record.User_HighScores.TABLE_NAME, projections, selection, selection_args,null,null, Record.User_HighScores.USER_SCORE + " DESC");
         return cursor;
     }
 
