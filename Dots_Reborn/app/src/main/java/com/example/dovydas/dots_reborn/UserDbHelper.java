@@ -35,6 +35,13 @@ public class UserDbHelper extends SQLiteOpenHelper{
         return cursor;
     }
 
+    public void deleteInformation(String size, String mode, SQLiteDatabase db){
+        String selection = Record.User_HighScores.BOARD_SIZE +"=? AND " + Record.User_HighScores.GAME_MODE +"=?";
+        String[] selection_args = {size, mode};
+        db.delete(Record.User_HighScores.TABLE_NAME, selection, selection_args);
+    }
+
+
     @Override
     public void onCreate(SQLiteDatabase db){
         db.execSQL(CREATE_QUERY);

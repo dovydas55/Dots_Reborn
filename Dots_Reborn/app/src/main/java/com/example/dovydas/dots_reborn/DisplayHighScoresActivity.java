@@ -77,6 +77,10 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
         _adapter = new RecordAdapter(this, _data);
         _listView.setAdapter(_adapter);
 
+        /* initializing database properties */
+        _userDbHelper = new UserDbHelper(getApplicationContext());
+        _sqLiteDatabase = _userDbHelper.getReadableDatabase();
+
 
         /* fill mock data */
         //init();
@@ -129,14 +133,13 @@ public class DisplayHighScoresActivity extends AppCompatActivity {
     }
 
     public void clearHistory(View v){
-        //TODO: clear history
-        Toast.makeText(getApplicationContext(), "TODO: clear history for " + _selectedBoardSize, Toast.LENGTH_SHORT).show();
+        _userDbHelper.deleteInformation(_selectedBoardSize, _gameMode, _sqLiteDatabase);
+        _data.clear();
+        _adapter.notifyDataSetChanged();
     }
 
     private void readRecords(){
         _data.clear();
-        _userDbHelper = new UserDbHelper(getApplicationContext());
-        _sqLiteDatabase = _userDbHelper.getReadableDatabase();
         _cursor = _userDbHelper.getInformations(_selectedBoardSize, _gameMode, _sqLiteDatabase);
         if(_cursor.moveToFirst()){
             do {
