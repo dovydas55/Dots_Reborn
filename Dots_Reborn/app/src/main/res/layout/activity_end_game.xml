@@ -95,7 +95,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:onClick="goHome"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/ic_home"/>
         <com.example.dovydas.dots_reborn.SquareIcon
             android:layout_width="0dp"
             android:layout_height="fill_parent"
