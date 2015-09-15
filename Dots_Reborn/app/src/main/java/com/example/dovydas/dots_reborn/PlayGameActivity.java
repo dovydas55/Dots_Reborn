@@ -65,10 +65,12 @@ public class PlayGameActivity extends AppCompatActivity {
 
             @Override
             public void onUpdateMove() {
-                _movesLeft -= 1;
-                updateMoves();
-                if(_movesLeft == 0){
-                    endGame();
+                if(_gameMode.equals("Move mode")){
+                    _movesLeft -= 1;
+                    updateMoves();
+                    if(_movesLeft == 0){
+                        endGame();
+                    }
                 }
             }
 

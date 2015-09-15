@@ -30,6 +30,7 @@
 
     <string name="hello_world">Hello world!</string>
 
-    <string name="final_score">You\'re Score</string>
+    <string name="final_score">Score</string>
+    <string name="best_score">Best</string>
 
 </resources>

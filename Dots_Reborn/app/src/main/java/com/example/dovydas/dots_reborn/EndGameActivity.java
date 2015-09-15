@@ -3,6 +3,7 @@ package com.example.dovydas.dots_reborn;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,18 +13,24 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class EndGameActivity extends AppCompatActivity {
 
     public final static String GAME_MODE = "com.example.dovydas.dots_reborn.GAME_MODE";
     private TextView _finalScore;
+    private TextView _bestResult;
+    private TextView _afterGameMessage;
     private int _userScore;
     private String _gameMode;
+    private ArrayList<Record> _data;
+
 
     private Context context = this;
-    private UserDbHelper userDbHelper;
-    private SQLiteDatabase sqLiteDatabase;
+    private UserDbHelper _userDbHelper;
+    private SQLiteDatabase _sqLiteDatabase;
+    private Cursor _cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +41,17 @@ public class EndGameActivity extends AppCompatActivity {
 
         _userScore = Integer.parseInt(intent.getStringExtra(PlayGameActivity.FINAL_SCORE));
         _finalScore = (TextView) findViewById(R.id.final_game_score);
+        _bestResult = (TextView) findViewById(R.id.best_game_score);
+        _afterGameMessage = (TextView) findViewById(R.id.msg);
         _gameMode = intent.getStringExtra(PlayGameActivity.GAMEMODE);
+        _data = new ArrayList<>();
 
+        _userDbHelper = new UserDbHelper(context);
+        _sqLiteDatabase = _userDbHelper.getWritableDatabase();
+
+        readRecords();
         addScoreToDb();
+
 
     }
 
@@ -107,13 +122,44 @@ public class EndGameActivity extends AppCompatActivity {
         animator.start();
     }
 
+    /***********************************/
+    /*   Notice how 6x6 is hardcoded   */
+    /***********************************/
+
     private void addScoreToDb(){
         Record rec = new Record(_userScore, new Date(), "6x6", _gameMode);
-        userDbHelper = new UserDbHelper(context);
-        sqLiteDatabase = userDbHelper.getWritableDatabase();
-        userDbHelper.addInformations(rec.getHighScore(), rec.getTime(), rec.getBoardSize(), rec.getGameMode(), sqLiteDatabase);
+        _userDbHelper.addInformations(rec.getHighScore(), rec.getTime(), rec.getBoardSize(), rec.getGameMode(), _sqLiteDatabase);
         Toast.makeText(getBaseContext(), "Data saved", Toast.LENGTH_LONG).show();
-        userDbHelper.close();
+        _userDbHelper.close();
+    }
+
+    /*getting best score */
+    private void readRecords(){
+        _data.clear();
+        _cursor = _userDbHelper.getInformations("6x6", _gameMode, _sqLiteDatabase);
+        if(_cursor.moveToFirst()){
+            do {
+                String score, date;
+                score = _cursor.getString(0); /* column index */
+                date = _cursor.getString(1);
+                _data.add(new Record(score, date));
+
+            } while(_cursor.moveToNext());
+        }
+
+        if(!_data.isEmpty()){
+            _bestResult.setText(_data.get(0).getDBscore());
+        } else {
+            _bestResult.setText("0");
+        }
+
+        if(_data.isEmpty() || _userScore > Integer.parseInt(_data.get(0).getDBscore())){
+            /* new high score */
+            _afterGameMessage.setText("NEW HIGH SCORE!");
+        } else {
+            _afterGameMessage.setText("You can do better!!");
+        }
+
     }
 
 }
