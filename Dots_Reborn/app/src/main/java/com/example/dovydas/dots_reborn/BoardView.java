@@ -311,10 +311,9 @@ public class BoardView extends View {
     private void initializeColorMap(){
         _colorMap.put(0, "#BA60BE");
         _colorMap.put(1, "#668CD8");
-        _colorMap.put(2, "#57CEBF");
-        _colorMap.put(3, "#6AC65F");
-        _colorMap.put(4, "#E9D439");
-        _colorMap.put(5, "#D86660");
+        _colorMap.put(2, "#6AC65F");
+        _colorMap.put(3, "#E9D439");
+        _colorMap.put(4, "#D86660");
 
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -52,6 +53,11 @@ public class EndGameActivity extends AppCompatActivity {
         readRecords();
         addScoreToDb();
 
+        ActionBar action = getSupportActionBar();
+        action.setDisplayShowHomeEnabled(true);
+        action.setDisplayShowTitleEnabled(false);
+        action.setLogo(R.drawable.ic_scores);
+        action.setDisplayUseLogoEnabled(true);
 
     }
 
@@ -77,6 +83,8 @@ public class EndGameActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, InGameOptionsActivity.class);
+            startActivity(intent);
             return true;
         }
 

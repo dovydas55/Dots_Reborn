@@ -33,6 +33,7 @@ public class PlayGameActivity extends AppCompatActivity {
         action.setDisplayShowHomeEnabled(true);
         action.setLogo(R.drawable.ic_moves);
         action.setDisplayUseLogoEnabled(true);
+        action.setDisplayShowTitleEnabled(false);
 
         /* Extract game mode */
         Intent intent = getIntent();

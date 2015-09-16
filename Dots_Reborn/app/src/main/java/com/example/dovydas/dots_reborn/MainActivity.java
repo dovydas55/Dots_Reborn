@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         action.setDisplayShowHomeEnabled(true);
         action.setLogo(R.mipmap.ic_launcher);
         action.setDisplayUseLogoEnabled(true);
-
+        action.setDisplayShowTitleEnabled(false);
 
     }
 
