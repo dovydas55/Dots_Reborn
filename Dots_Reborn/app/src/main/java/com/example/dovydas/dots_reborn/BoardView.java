@@ -25,8 +25,10 @@ public class BoardView extends View {
 
     private int _cellWidth;
     private int _cellHeight;
+
     private ArrayList<Point> _pointSet;
     private ArrayList<Point> _adjacentPoints;
+    private ArrayList<Point> _removedPoints;
 
     private HashMap<Integer, String> _colorMap;
     private boolean _isMoving = false;
@@ -61,6 +63,8 @@ public class BoardView extends View {
         /* ********************* */
 
         _adjacentPoints = new ArrayList<>();
+        _removedPoints = new ArrayList<>();
+
         _colorMap = new HashMap<>();
         _selectedPoint = null;
 
@@ -184,15 +188,17 @@ public class BoardView extends View {
 
             if(_isMatch){
                 /* remove all marked points */
+                _removedPoints = checkDeletedPoints();
                 for(int i = 0; i < _pointSet.size(); i++){
                     if(_pointSet.get(i).getMarked() == true){
                         Point removed = _pointSet.get(i);
+                        int icr = checkHowManyRemoved(removed.getCol(), removed.getRow());
                         _pointSet.remove(i);
                         i--;
                         for(int j = _pointSet.size() - 1; j >=0; j--){
                             if(_pointSet.get(j).getCol() == removed.getCol() && _pointSet.get(j).getRow() <= removed.getRow()){
-                                animateMovement(colToX(_pointSet.get(j).getCol()), rowToY(_pointSet.get(j).getRow()), rowToY(_pointSet.get(j).getRow() + 1), j);
-                                _pointSet.get(j).setRow(_pointSet.get(j).getRow() + 1);
+                                animateMovement(colToX(_pointSet.get(j).getCol()), rowToY(_pointSet.get(j).getRow()), rowToY(_pointSet.get(j).getRow() + icr), j);
+                                _pointSet.get(j).setRow(_pointSet.get(j).getRow() + icr);
                             }
                         }
 
@@ -210,6 +216,7 @@ public class BoardView extends View {
                 }
             }
 
+            _removedPoints.clear();
             _paintPath = null;
             _isMatch = false;
             invalidate();
@@ -224,16 +231,34 @@ public class BoardView extends View {
         _eventHandler = geh;
     }
 
-
-
     /***************************************************************************************/
     /********************************* PRIVATE METHODS *************************************/
     /***************************************************************************************/
+    private ArrayList<Point> checkDeletedPoints(){
+        ArrayList<Point> arr = new ArrayList<>();
+        for(Point p : _pointSet){
+            if(p.getMarked() == true){
+                arr.add(p);
+            }
+        }
+        return arr;
+    }
+
+    private int checkHowManyRemoved(int col, int row){
+        int counter = 0;
+        for(Point p : _pointSet){
+            if(p.getCol() == col && p.getRow() <= row && p.getMarked() == true){
+                counter++;
+            }
+        }
+
+        return counter;
+    }
 
     private ArrayList<Point> findAdjacentPoints(){
         ArrayList<Point> arr = new ArrayList<>();
         for(Point p : _pointSet){
-            if(adjacentPoint(p) && !p.getMarked()){
+            if (adjacentPoint(p) && !p.getMarked()){
                 arr.add(p);
             }
         }
