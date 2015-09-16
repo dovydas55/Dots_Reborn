@@ -260,7 +260,7 @@ public class BoardView extends View {
         Random rand = new Random();
         for(int i = 0; i < NUM_CELLS; i++){
             for(int j = 0; j < NUM_CELLS; j++){
-                int color = rand.nextInt(6); /* General formula rand.nextInt((max - min) + 1) + min;*/
+                int color = rand.nextInt(5); /* General formula rand.nextInt((max - min) + 1) + min;*/
                 _pointSet.add(new Point(j, i, color, createPaintBrush(color), createCircle(j, i), false));
             }
         }
