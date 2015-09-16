@@ -1,6 +1,7 @@
 package com.example.dovydas.dots_reborn;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -8,6 +9,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -25,6 +27,9 @@ import java.util.Random;
  * Created by Dovydas on 9/10/15.
  */
 public class BoardView extends View {
+
+    private SharedPreferences _sp;
+    private int _numCells;
 
     private int _cellWidth;
     private int _cellHeight;
@@ -47,7 +52,7 @@ public class BoardView extends View {
     /* ****************************** */
 
     private GeneralEventHandler _eventHandler = null;
-    private int NUM_CELLS = 6; /* default board size */
+    //private int NUM_CELLS = 6; /* default board size */
 
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -88,10 +93,13 @@ public class BoardView extends View {
 
     @Override
     protected void onSizeChanged( int xNew, int yNew, int xOld, int yOld ) {
+        _sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        _numCells = Integer.parseInt(_sp.getString("boardPref", "6"));
+
         int   boardWidth = (xNew - getPaddingLeft() - getPaddingRight());
         int   boardHeight = (yNew - getPaddingTop() - getPaddingBottom());
-        _cellWidth = boardWidth / NUM_CELLS;
-        _cellHeight = boardHeight / NUM_CELLS;
+        _cellWidth = boardWidth / _numCells;
+        _cellHeight = boardHeight / _numCells;
 
         initializePoints(); /* think about is there a better place where i could place it? */
 
@@ -256,10 +264,14 @@ public class BoardView extends View {
 
     private void initializePoints(){
         /* initially color set is 0 - 5 */
+
+        _sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        _numCells = Integer.parseInt(_sp.getString("boardPref", "6"));
+
         _pointSet = new ArrayList<>();
         Random rand = new Random();
-        for(int i = 0; i < NUM_CELLS; i++){
-            for(int j = 0; j < NUM_CELLS; j++){
+        for(int i = 0; i < _numCells; i++){
+            for(int j = 0; j < _numCells; j++){
                 int color = rand.nextInt(5); /* General formula rand.nextInt((max - min) + 1) + min;*/
                 _pointSet.add(new Point(j, i, color, createPaintBrush(color), createCircle(j, i), false));
             }
