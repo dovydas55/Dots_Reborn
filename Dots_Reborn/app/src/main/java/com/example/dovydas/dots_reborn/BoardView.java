@@ -1,5 +1,6 @@
 package com.example.dovydas.dots_reborn;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,22 +8,18 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
 /**
  * Created by Dovydas on 9/10/15.
+ * This class is loosely based on Yngvi Bjornsson's implementatin of 'InClassDrawingDemo'
+ * Source: https://github.com/yngvib/InClassDrawingDemo/blob/master/app/src/main/java/com/example/yngvi/inclassdrawingdemo/BoardView.java
  */
 public class BoardView extends View {
 
@@ -40,8 +37,12 @@ public class BoardView extends View {
     private Path _path = new Path();
     private Paint _paintPath;
     private ArrayList<Point> _cellPath = new ArrayList<>();
+
     /* ************************** */
-    /* for drawing grid on the canvas */
+    /* for drawing grid on the canvas
+    * only for debugging
+    * */
+
     private Rect _rect = new Rect();
     private Paint _paint = new Paint();
     /* ****************************** */
@@ -53,7 +54,7 @@ public class BoardView extends View {
         super(context, attrs);
 
         /* grid style parameters */
-        _paint.setColor(Color.RED);
+        _paint.setColor(Color.YELLOW);
         _paint.setStyle(Paint.Style.STROKE);
         _paint.setStrokeWidth(2);
         _paint.setAntiAlias(true);
@@ -100,7 +101,7 @@ public class BoardView extends View {
     @Override
     protected void onDraw(Canvas canvas){
         /* grid is only used while in development for debugging */
-        /*
+
         canvas.drawRect(_rect, _paint);
         for ( int row = 0; row < NUM_CELLS; ++row ) {
             for ( int col = 0; col < NUM_CELLS; ++col ) {
@@ -111,7 +112,7 @@ public class BoardView extends View {
                 canvas.drawRect( _rect, _paint );
             }
         }
-        */
+
         /* ********************************************************* */
 
         if ( !_cellPath.isEmpty() ) {
@@ -185,8 +186,16 @@ public class BoardView extends View {
                 /* remove all marked points */
                 for(int i = 0; i < _pointSet.size(); i++){
                     if(_pointSet.get(i).getMarked() == true){
+                        Point removed = _pointSet.get(i);
                         _pointSet.remove(i);
                         i--;
+                        for(int j = _pointSet.size() - 1; j >=0; j--){
+                            if(_pointSet.get(j).getCol() == removed.getCol() && _pointSet.get(j).getRow() <= removed.getRow()){
+                                animateMovement(colToX(_pointSet.get(j).getCol()), rowToY(_pointSet.get(j).getRow()), rowToY(_pointSet.get(j).getRow() + 1), j);
+                                _pointSet.get(j).setRow(_pointSet.get(j).getRow() + 1);
+                            }
+                        }
+
                         if(_eventHandler != null){
                             _eventHandler.onUpdateScore();
                         }
@@ -316,6 +325,25 @@ public class BoardView extends View {
         paint.setStyle(Paint.Style.STROKE);
         paint.setAntiAlias(true);
         return paint;
+    }
+
+    private void animateMovement(final int xT, final float yFrom, final float yTo, final int i) {
+        _pointSet.get(i).getAnimator().removeAllUpdateListeners();
+        _pointSet.get(i).getAnimator().setDuration(1000);
+        _pointSet.get(i).getAnimator().setFloatValues(0.0f, 1.0f);
+        _pointSet.get(i).getAnimator().addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float ratio = (float) animation.getAnimatedValue();
+                //int x = (int) ((1.0 - ratio) * xT + ratio * xT);
+                int y = (int) ((1.0 - ratio) * yFrom + ratio * yTo);
+                _pointSet.get(i).getCircle().offsetTo(xT + _cellWidth / 2 - _pointSet.get(i).getCircle().height() / 2, y + _cellHeight / 2 - _pointSet.get(i).getCircle().width() / 2);
+
+                invalidate();
+            }
+        });
+        _pointSet.get(i).getAnimator().start();
+
     }
 
     /***************************************************************************************/
