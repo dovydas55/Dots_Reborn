@@ -197,7 +197,7 @@ public class BoardView extends View {
                         i--;
                         for(int j = _pointSet.size() - 1; j >=0; j--){
                             if(_pointSet.get(j).getCol() == removed.getCol() && _pointSet.get(j).getRow() <= removed.getRow()){
-                                animateMovement(colToX(_pointSet.get(j).getCol()), rowToY(_pointSet.get(j).getRow()), rowToY(_pointSet.get(j).getRow() + icr), j);
+                                animateMovement(colToX(_pointSet.get(j).getCol()), rowToY(_pointSet.get(j).getRow()), rowToY(_pointSet.get(j).getRow() + icr), j, false);
                                 _pointSet.get(j).setRow(_pointSet.get(j).getRow() + icr);
                             }
                         }
@@ -298,6 +298,10 @@ public class BoardView extends View {
                 _pointSet.add(new Point(j, i, color, createPaintBrush(color), createCircle(j, i), false));
             }
         }
+
+        for(int i = _pointSet.size() - 1; i >= 0; i--){
+            animateMovement(colToX(_pointSet.get(i).getCol()), -1500, rowToY(_pointSet.get(i).getRow()), i, true);
+        }
     }
 
     private Paint createPaintBrush(int color){
@@ -352,9 +356,14 @@ public class BoardView extends View {
         return paint;
     }
 
-    private void animateMovement(final int xT, final float yFrom, final float yTo, final int i) {
+    private void animateMovement(final int xT, final float yFrom, final float yTo, final int i, boolean spawn) {
         _pointSet.get(i).getAnimator().removeAllUpdateListeners();
-        _pointSet.get(i).getAnimator().setDuration(1000);
+        if(spawn){
+            _pointSet.get(i).getAnimator().setDuration(2000);
+        } else {
+            _pointSet.get(i).getAnimator().setDuration(1000);
+        }
+
         _pointSet.get(i).getAnimator().setFloatValues(0.0f, 1.0f);
         _pointSet.get(i).getAnimator().addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
