@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference android:title="Board Size"
+        android:key="boardPref"
+        android:defaultValue="6x6"
+        android:entries="@array/highscore_menu"
+        android:entryValues="@array/boardsize_values" />
+</PreferenceScreen>

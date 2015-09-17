@@ -2,12 +2,14 @@ package com.example.dovydas.dots_reborn;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -24,6 +26,9 @@ import java.util.Random;
  * Source: https://github.com/yngvib/InClassDrawingDemo/blob/master/app/src/main/java/com/example/yngvi/inclassdrawingdemo/BoardView.java
  */
 public class BoardView extends View {
+
+    private SharedPreferences _sp;
+    private int _numCells;
 
     private int _cellWidth;
     private int _cellHeight;
@@ -95,10 +100,13 @@ public class BoardView extends View {
 
     @Override
     protected void onSizeChanged( int xNew, int yNew, int xOld, int yOld ) {
+        _sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        _numCells = Integer.parseInt(_sp.getString("boardPref", "6"));
+
         int   boardWidth = (xNew - getPaddingLeft() - getPaddingRight());
         int   boardHeight = (yNew - getPaddingTop() - getPaddingBottom());
-        _cellWidth = boardWidth / NUM_CELLS;
-        _cellHeight = boardHeight / NUM_CELLS;
+        _cellWidth = boardWidth / _numCells;
+        _cellHeight = boardHeight / _numCells;
 
         initializePoints(); /* think about is there a better place where i could place it? */
 
@@ -107,7 +115,7 @@ public class BoardView extends View {
     @Override
     protected void onDraw(Canvas canvas){
         /* grid is only used while in development for debugging */
-
+        /*
         canvas.drawRect(_rect, _paint);
         for ( int row = 0; row < NUM_CELLS; ++row ) {
             for ( int col = 0; col < NUM_CELLS; ++col ) {
@@ -118,7 +126,7 @@ public class BoardView extends View {
                 canvas.drawRect( _rect, _paint );
             }
         }
-
+        */
         /* ********************************************************* */
 
         if ( !_cellPath.isEmpty() ) {
@@ -190,7 +198,7 @@ public class BoardView extends View {
 
             if(_isMatch){
                 /* remove all marked points */
-                for(int i = 0; i < _pointSet.size() && i < NUM_CELLS * NUM_CELLS; i++){
+                for(int i = 0; i < _pointSet.size() && i < _numCells * _numCells; i++){
                     if(_pointSet.get(i).getMarked()){
                         int icr = checkHowManyRemoved(_pointSet.get(i).getCol(), _pointSet.get(i).getRow());
                         _removedPoints.add(_pointSet.get(i));
@@ -287,10 +295,15 @@ public class BoardView extends View {
 
     private void initializePoints(){
         /* initially color set is 0 - 5 */
+
+        _sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        _numCells = Integer.parseInt(_sp.getString("boardPref", "6"));
+
         _pointSet = new ArrayList<>();
-        for(int i = 0; i < NUM_CELLS; i++){
-            for(int j = 0; j < NUM_CELLS; j++){
-                int color = _rand.nextInt(NUM_COLORS); /* General formula rand.nextInt((max - min) + 1) + min;*/
+        Random rand = new Random();
+        for(int i = 0; i < _numCells; i++){
+            for(int j = 0; j < _numCells; j++){
+                int color = rand.nextInt(5); /* General formula rand.nextInt((max - min) + 1) + min;*/
                 _pointSet.add(new Point(j, i, color, createPaintBrush(color), createCircle(j, i), false));
             }
         }
@@ -333,10 +346,9 @@ public class BoardView extends View {
     private void initializeColorMap(){
         _colorMap.put(0, "#BA60BE");
         _colorMap.put(1, "#668CD8");
-        _colorMap.put(2, "#57CEBF");
-        _colorMap.put(3, "#6AC65F");
-        _colorMap.put(4, "#E9D439");
-        _colorMap.put(5, "#D86660");
+        _colorMap.put(2, "#6AC65F");
+        _colorMap.put(3, "#E9D439");
+        _colorMap.put(4, "#D86660");
 
     }
 

@@ -17,13 +17,13 @@ import android.view.animation.ScaleAnimation;
 public class MainActivity extends AppCompatActivity {
 
     public final static String GAME_MODE = "com.example.dovydas.dots_reborn.GAME_MODE";
-    private Vibrator _vibrator;
-    private boolean _use_vibration = false;
+    //private Vibrator _vibrator;
+    //private boolean _use_vibration = false;
     private SquareIcon _ic_1;
     private SquareIcon _ic_2;
     private SquareIcon _ic_3;
     private SquareIcon _ic_4;
-    private SharedPreferences _sp;
+    //private SharedPreferences _sp;
 
 
     @Override
@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        _vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        _sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        //_vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        //_sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         _ic_1 = (SquareIcon) findViewById(R.id.home_moves);
         _ic_2 = (SquareIcon) findViewById(R.id.home_time);
@@ -43,20 +43,21 @@ public class MainActivity extends AppCompatActivity {
         action.setDisplayShowHomeEnabled(true);
         action.setLogo(R.mipmap.ic_launcher);
         action.setDisplayUseLogoEnabled(true);
-
+        action.setDisplayShowTitleEnabled(false);
 
     }
 
+    //throw this out?
     @Override
     protected void onStart(){
         super.onStart();
-        _use_vibration = _sp.getBoolean("vibrate",false);
+        /*_use_vibration = _sp.getBoolean("vibrate",false);
 
         //not supposed to be here, decide what to link vibrate to
         if(_use_vibration) {
             _vibrator.vibrate(500);
         }
-
+        */
     }
 
     @Override

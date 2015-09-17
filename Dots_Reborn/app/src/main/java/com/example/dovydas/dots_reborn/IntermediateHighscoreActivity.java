@@ -34,6 +34,7 @@ public class IntermediateHighscoreActivity extends AppCompatActivity {
         action.setDisplayShowHomeEnabled(true);
         action.setLogo(R.drawable.ic_scores);
         action.setDisplayUseLogoEnabled(true);
+        action.setDisplayShowTitleEnabled(false);
 
     }
 
