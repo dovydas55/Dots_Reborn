@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,16 +24,23 @@ public class MainActivity extends AppCompatActivity {
     private SquareIcon _ic_2;
     private SquareIcon _ic_3;
     private SquareIcon _ic_4;
-    //private SharedPreferences _sp;
-
+    private SharedPreferences _sp;
+    private int _theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /*theme test*/
+        /*
+        _sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String theme_entry = _sp.getString("themePref", "R.style.Dovy");
+        Log.v("MainActivity", theme_entry);
+        */
+        //setTheme(R.style.Gunnhildur);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //_vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        //_sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         _ic_1 = (SquareIcon) findViewById(R.id.home_moves);
         _ic_2 = (SquareIcon) findViewById(R.id.home_time);

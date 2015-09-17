@@ -3,7 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference android:title="Board Size"
         android:key="boardPref"
-        android:defaultValue="6x6"
+        android:defaultValue="6"
         android:entries="@array/highscore_menu"
         android:entryValues="@array/boardsize_values" />
+    <ListPreference android:title="Theme"
+        android:key="themePref"
+        android:defaultValue="R.style.Dovy"
+        android:entries="@array/theme_entries"
+        android:entryValues="@array/theme_values" />
 </PreferenceScreen>

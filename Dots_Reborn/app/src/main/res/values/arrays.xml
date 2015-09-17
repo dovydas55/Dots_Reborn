@@ -10,4 +10,12 @@
         <item>8</item>
         <item>10</item>
     </string-array>
+    <string-array name="theme_entries">
+        <item>Dovy\'s theme</item>
+        <item>Gunnhildur\'s theme</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>R.style.Dovy</item>
+        <item>R.style.Gunnhildur</item>
+    </string-array>
 </resources>
