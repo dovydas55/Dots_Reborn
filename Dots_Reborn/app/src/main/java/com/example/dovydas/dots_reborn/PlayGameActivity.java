@@ -1,7 +1,11 @@
 package com.example.dovydas.dots_reborn;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +24,10 @@ public class PlayGameActivity extends AppCompatActivity {
     private int _movesLeft = 5; /* MAKE SURE TO CHANGE IT BACK!!*/
     private int _gameScore = 0;
     private BoardView _gameBoard;
+
+    private Vibrator _vibrator;
+    private boolean _use_vibration = false;
+    private SharedPreferences _sp;
 
     public final static String FINAL_SCORE = "com.example.dovydas.dots_reborn.FINAL_SCORE";
     public final static String GAMEMODE = "com.example.dovydas.dots_reborn.GAME_MODE";
@@ -55,6 +63,9 @@ public class PlayGameActivity extends AppCompatActivity {
             startTimeCounter();
             action.setLogo(R.drawable.ic_timed);
         }
+
+        _vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        _sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         /* working with handlers */
         _gameBoard.setGeneralHandler(new GeneralEventHandler() {
@@ -109,6 +120,13 @@ public class PlayGameActivity extends AppCompatActivity {
 
     private void updateScore(){
         _displayScore.setText("Score " + Integer.toString(_gameScore));
+
+
+        //vibrate every time score increases
+        _use_vibration = _sp.getBoolean("vibrate",false);
+        if(_use_vibration) {
+            _vibrator.vibrate(500);
+        }
     }
 
     private void updateMoves(){
