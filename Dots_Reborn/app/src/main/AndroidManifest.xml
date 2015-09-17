@@ -37,6 +37,7 @@
         </activity>
         <activity
             android:name=".PlayGameActivity"
+            android:screenOrientation="portrait"
             android:icon="@drawable/ic_timed" >
         </activity>
         <activity

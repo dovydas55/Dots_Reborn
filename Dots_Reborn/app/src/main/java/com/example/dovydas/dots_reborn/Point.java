@@ -1,5 +1,6 @@
 package com.example.dovydas.dots_reborn;
 
+import android.animation.ValueAnimator;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
@@ -15,6 +16,7 @@ public class Point {
     private boolean _marked;
     private RectF _circle;
     private Paint _paint;
+    private ValueAnimator _animator;
 
 
     public Point(int row, int col, int color, Paint paint, RectF circle, boolean match){
@@ -24,6 +26,7 @@ public class Point {
         this._circle = circle;
         this._paint = paint;
         this._marked = match;
+        this._animator = new ValueAnimator();
     }
 
     /* Overloaded constructor */
@@ -32,12 +35,20 @@ public class Point {
         this._row = row;
     }
 
+    public ValueAnimator getAnimator(){
+        return _animator;
+    }
+
     public RectF getCircle(){
         return _circle;
     }
 
     public Paint getPaint(){
         return _paint;
+    }
+
+    public void setPaint(Paint p) {
+        _paint = p;
     }
 
     public int getColor(){
@@ -57,7 +68,7 @@ public class Point {
     }
 
     public void setCol(int col){
-        _col = col;
+        _color = col;
     }
 
     public boolean getMarked(){

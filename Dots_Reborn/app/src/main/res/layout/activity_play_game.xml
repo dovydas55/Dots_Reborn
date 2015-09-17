@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:clipChildren="false"
     tools:context="com.example.dovydas.dots_reborn.PlayGameActivity">
 
     <LinearLayout

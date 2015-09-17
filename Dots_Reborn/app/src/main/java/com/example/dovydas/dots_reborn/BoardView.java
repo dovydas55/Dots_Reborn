@@ -1,5 +1,6 @@
 package com.example.dovydas.dots_reborn;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -8,23 +9,21 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Random;
 
 /**
  * Created by Dovydas on 9/10/15.
+ * This class is loosely based on Yngvi Bjornsson's implementatin of 'InClassDrawingDemo'
+ * Source: https://github.com/yngvib/InClassDrawingDemo/blob/master/app/src/main/java/com/example/yngvi/inclassdrawingdemo/BoardView.java
  */
 public class BoardView extends View {
 
@@ -33,8 +32,10 @@ public class BoardView extends View {
 
     private int _cellWidth;
     private int _cellHeight;
+
     private ArrayList<Point> _pointSet;
     private ArrayList<Point> _adjacentPoints;
+    private ArrayList<Point> _removedPoints;
 
     private HashMap<Integer, String> _colorMap;
     private boolean _isMoving = false;
@@ -45,28 +46,34 @@ public class BoardView extends View {
     private Path _path = new Path();
     private Paint _paintPath;
     private ArrayList<Point> _cellPath = new ArrayList<>();
+    private Random _rand;
+
     /* ************************** */
-    /* for drawing grid on the canvas */
+    /* for drawing grid on the canvas only for debugging */
     private Rect _rect = new Rect();
     private Paint _paint = new Paint();
     /* ****************************** */
 
     private GeneralEventHandler _eventHandler = null;
-    //private int NUM_CELLS = 6; /* default board size */
+    private int NUM_CELLS = 6; /* default board size */
+    private int NUM_COLORS = 5;
 
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         /* grid style parameters */
-        _paint.setColor(Color.RED);
+        _paint.setColor(Color.YELLOW);
         _paint.setStyle(Paint.Style.STROKE);
         _paint.setStrokeWidth(2);
         _paint.setAntiAlias(true);
         /* ********************* */
 
         _adjacentPoints = new ArrayList<>();
+        _removedPoints = new ArrayList<>();
+
         _colorMap = new HashMap<>();
         _selectedPoint = null;
+        _rand = new Random();
 
         initializeColorMap();
 
@@ -191,10 +198,22 @@ public class BoardView extends View {
 
             if(_isMatch){
                 /* remove all marked points */
-                for(int i = 0; i < _pointSet.size(); i++){
-                    if(_pointSet.get(i).getMarked() == true){
-                        _pointSet.remove(i);
-                        i--;
+                for(int i = 0; i < _pointSet.size() && i < _numCells * _numCells; i++){
+                    if(_pointSet.get(i).getMarked()){
+                        int icr = checkHowManyRemoved(_pointSet.get(i).getCol(), _pointSet.get(i).getRow());
+                        _removedPoints.add(_pointSet.get(i));
+                        //_pointSet.remove(i);
+                        //_pointSet.get(i).setMarked(false);
+                        //i--;
+
+                        _pointSet.get(i).setMarked(false);
+                        _pointSet.get(i).setRow(_pointSet.get(i).getRow() - icr + 1);
+
+                        int c = _rand.nextInt(NUM_COLORS);
+                        _pointSet.get(i).setCol(c);
+                        _pointSet.get(i).setPaint(createPaintBrush(c));
+                        animateMovement(colToX(_pointSet.get(i).getCol()), -1500, rowToY(_pointSet.get(i).getRow()), i);
+
                         if(_eventHandler != null){
                             _eventHandler.onUpdateScore();
                         }
@@ -203,12 +222,15 @@ public class BoardView extends View {
                 if(_eventHandler != null){
                     _eventHandler.onUpdateMove(); /* a move has been made by user */
                 }
+
+                //rePopulatePointSet();
             } else {
                 for(int i = 0; i < _pointSet.size(); i++){
                     _pointSet.get(i).setMarked(false);
                 }
             }
 
+            _removedPoints.clear();
             _paintPath = null;
             _isMatch = false;
             invalidate();
@@ -223,16 +245,25 @@ public class BoardView extends View {
         _eventHandler = geh;
     }
 
-
-
     /***************************************************************************************/
     /********************************* PRIVATE METHODS *************************************/
     /***************************************************************************************/
 
+    private int checkHowManyRemoved(int col, int row){
+        int counter = 0;
+        for(Point p : _pointSet){
+            if(p.getCol() == col && p.getRow() <= row && p.getMarked()){
+                counter++;
+            }
+        }
+
+        return counter;
+    }
+
     private ArrayList<Point> findAdjacentPoints(){
         ArrayList<Point> arr = new ArrayList<>();
         for(Point p : _pointSet){
-            if(adjacentPoint(p) && !p.getMarked()){
+            if (adjacentPoint(p) && !p.getMarked()){
                 arr.add(p);
             }
         }
@@ -275,6 +306,10 @@ public class BoardView extends View {
                 int color = rand.nextInt(5); /* General formula rand.nextInt((max - min) + 1) + min;*/
                 _pointSet.add(new Point(j, i, color, createPaintBrush(color), createCircle(j, i), false));
             }
+        }
+
+        for(int i = _pointSet.size() - 1; i >= 0; i--){
+            animateMovement(colToX(_pointSet.get(i).getCol()), -1500, rowToY(_pointSet.get(i).getRow()), i);
         }
     }
 
@@ -327,6 +362,25 @@ public class BoardView extends View {
         paint.setStyle(Paint.Style.STROKE);
         paint.setAntiAlias(true);
         return paint;
+    }
+
+    private void animateMovement(final int xT, final float yFrom, final float yTo, final int i) {
+        _pointSet.get(i).getAnimator().removeAllUpdateListeners();
+        _pointSet.get(i).getAnimator().setDuration(1500);
+        _pointSet.get(i).getAnimator().setFloatValues(0.0f, 1.0f);
+        _pointSet.get(i).getAnimator().addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float ratio = (float) animation.getAnimatedValue();
+                //int x = (int) ((1.0 - ratio) * xT + ratio * xT);
+                int y = (int) ((1.0 - ratio) * yFrom + ratio * yTo);
+                _pointSet.get(i).getCircle().offsetTo(xT + _cellWidth / 2 - _pointSet.get(i).getCircle().height() / 2, y + _cellHeight / 2 - _pointSet.get(i).getCircle().width() / 2);
+
+                invalidate();
+            }
+        });
+        _pointSet.get(i).getAnimator().start();
+
     }
 
     /***************************************************************************************/
