@@ -6,5 +6,6 @@ package com.example.dovydas.dots_reborn;
 public interface GeneralEventHandler {
     void onUpdateScore();
     void onUpdateMove();
+    void controlSpecialOps();
 }
 

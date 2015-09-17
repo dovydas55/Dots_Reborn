@@ -15,13 +15,36 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:text="@string/explode_board"
+            android:onClick="explodeBoard"
+            android:gravity="center"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="@string/shuffle_board"
             android:onClick="shuffleBoard"
             android:gravity="center"
             android:textSize="20sp"/>
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/exploded_adjacent"
+            android:onClick="explodeAdjacent"
+            android:gravity="center"
+            android:textSize="20sp"/>
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="25sp"
+        android:id="@+id/spec"/>
 
     <com.example.dovydas.dots_reborn.BoardView
         android:layout_width="wrap_content"

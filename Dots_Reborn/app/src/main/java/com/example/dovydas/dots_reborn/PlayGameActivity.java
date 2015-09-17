@@ -20,6 +20,8 @@ public class PlayGameActivity extends AppCompatActivity {
     private int _movesLeft = 5; /* MAKE SURE TO CHANGE IT BACK!!*/
     private int _gameScore = 0;
     private BoardView _gameBoard;
+    private int SPECIAL_OPS = 5;
+    private TextView _displayCheats;
 
     public final static String FINAL_SCORE = "com.example.dovydas.dots_reborn.FINAL_SCORE";
     public final static String GAMEMODE = "com.example.dovydas.dots_reborn.GAME_MODE";
@@ -46,8 +48,10 @@ public class PlayGameActivity extends AppCompatActivity {
         _displayScore = (TextView) findViewById(R.id.play_display_score);
         _displayTimeOrMoves = (TextView) findViewById(R.id.play_display_time_or_moves);
         _gameBoard = (BoardView) findViewById(R.id.gameCanvas);
+        _displayCheats = (TextView) findViewById(R.id.spec);
 
         updateScore(); /* initializing score */
+        displayCheatView(); /* initialize cheats */
         if(_gameMode.equals("Move mode")){
             updateMoves();
         } else if(_gameMode.equals("Time mode")) {
@@ -72,6 +76,12 @@ public class PlayGameActivity extends AppCompatActivity {
                         endGame();
                     }
                 }
+            }
+
+            @Override
+            public void controlSpecialOps(){
+                SPECIAL_OPS--;
+                displayCheatView();
             }
 
         });
@@ -102,8 +112,27 @@ public class PlayGameActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void displayCheatView(){
+        _displayCheats.setText(Integer.toString(SPECIAL_OPS));
+    }
+
     public void shuffleBoard(View v){
-        _gameBoard.shuffleBoard();
+        if(SPECIAL_OPS > 0){
+            _gameBoard.shuffleBoard();
+        }
+
+    }
+
+    public void explodeBoard(View v){
+        if(SPECIAL_OPS > 0) {
+            _gameBoard.setExplosion();
+        }
+    }
+
+    public void explodeAdjacent(View v){
+        if(SPECIAL_OPS > 0) {
+            _gameBoard.setExplodeAdjancent();
+        }
     }
 
     private void updateScore(){
@@ -139,4 +168,5 @@ public class PlayGameActivity extends AppCompatActivity {
         intent.putExtra(GAMEMODE, _gameMode);
         startActivity(intent);
     }
+
 }
