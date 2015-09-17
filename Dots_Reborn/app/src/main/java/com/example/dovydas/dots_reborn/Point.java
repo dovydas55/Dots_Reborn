@@ -47,6 +47,10 @@ public class Point {
         return _paint;
     }
 
+    public void setPaint(Paint p) {
+        _paint = p;
+    }
+
     public int getColor(){
         return _color;
     }
@@ -64,7 +68,7 @@ public class Point {
     }
 
     public void setCol(int col){
-        _col = col;
+        _color = col;
     }
 
     public boolean getMarked(){
