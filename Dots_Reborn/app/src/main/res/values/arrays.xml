@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="highscore_menu">
+        <item>4x4</item>
         <item>6x6</item>
         <item>8x8</item>
-        <item>10x10</item>
     </string-array>
     <string-array name="boardsize_values">
+        <item>4</item>
         <item>6</item>
         <item>8</item>
-        <item>10</item>
     </string-array>
     <string-array name="theme_entries">
         <item>Dovy\'s theme</item>

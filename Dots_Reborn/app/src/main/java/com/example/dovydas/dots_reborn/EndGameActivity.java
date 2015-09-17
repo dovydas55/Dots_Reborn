@@ -3,8 +3,10 @@ package com.example.dovydas.dots_reborn;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class EndGameActivity extends AppCompatActivity {
 
@@ -27,6 +30,9 @@ public class EndGameActivity extends AppCompatActivity {
     private String _gameMode;
     private ArrayList<Record> _data;
 
+    private HashMap<Integer, String> _sizeMap;
+    private SharedPreferences _sp;
+    private String _boardSize;
 
     private Context context = this;
     private UserDbHelper _userDbHelper;
@@ -37,6 +43,14 @@ public class EndGameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end_game);
+
+        _sizeMap = new HashMap<>();
+        _sizeMap.put(4, "4x4");
+        _sizeMap.put(6, "6x6");
+        _sizeMap.put(8, "8x8");
+
+        _sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        _boardSize = _sizeMap.get(Integer.parseInt(_sp.getString("boardPref", "6")));
 
         Intent intent = getIntent();
 
@@ -49,7 +63,6 @@ public class EndGameActivity extends AppCompatActivity {
 
         _userDbHelper = new UserDbHelper(context);
         _sqLiteDatabase = _userDbHelper.getWritableDatabase();
-
         readRecords();
         addScoreToDb();
 
@@ -130,12 +143,10 @@ public class EndGameActivity extends AppCompatActivity {
         animator.start();
     }
 
-    /***********************************/
-    /*   Notice how 6x6 is hardcoded   */
-    /***********************************/
 
+    /*adding score*/
     private void addScoreToDb(){
-        Record rec = new Record(_userScore, new Date(), "6x6", _gameMode);
+        Record rec = new Record(_userScore, new Date(), _boardSize, _gameMode);
         _userDbHelper.addInformations(rec.getHighScore(), rec.getTime(), rec.getBoardSize(), rec.getGameMode(), _sqLiteDatabase);
         Toast.makeText(getBaseContext(), "Data saved", Toast.LENGTH_LONG).show();
         _userDbHelper.close();
@@ -144,7 +155,7 @@ public class EndGameActivity extends AppCompatActivity {
     /*getting best score */
     private void readRecords(){
         _data.clear();
-        _cursor = _userDbHelper.getInformations("6x6", _gameMode, _sqLiteDatabase);
+        _cursor = _userDbHelper.getInformations(_boardSize, _gameMode, _sqLiteDatabase);
         if(_cursor.moveToFirst()){
             do {
                 String score, date;
