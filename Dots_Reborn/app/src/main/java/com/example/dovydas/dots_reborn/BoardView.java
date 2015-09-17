@@ -12,8 +12,11 @@ import android.graphics.RectF;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,12 +38,14 @@ public class BoardView extends View {
 
     private ArrayList<Point> _pointSet;
     private ArrayList<Point> _adjacentPoints;
-    private ArrayList<Point> _removedPoints;
+    private boolean _explosion = false;
+    private boolean _explodeAdjacent = false;
 
     private HashMap<Integer, String> _colorMap;
     private boolean _isMoving = false;
     private boolean _isMatch = false;
     private Point _selectedPoint;
+    private GestureDetector gestureDetector;
 
     /* member variables for displaying the path */
     private Path _path = new Path();
@@ -69,13 +74,13 @@ public class BoardView extends View {
         /* ********************* */
 
         _adjacentPoints = new ArrayList<>();
-        _removedPoints = new ArrayList<>();
 
         _colorMap = new HashMap<>();
         _selectedPoint = null;
         _rand = new Random();
 
         initializeColorMap();
+        gestureDetector = new GestureDetector(context, new GestureListener());
 
     }
 
@@ -84,6 +89,9 @@ public class BoardView extends View {
     public void shuffleBoard(){
         initializePoints();
         invalidate();
+        if(_eventHandler != null){
+            _eventHandler.controlSpecialOps();
+        }
     }
 
     @Override
@@ -157,13 +165,24 @@ public class BoardView extends View {
             for(int i = 0; i < _pointSet.size(); i++){
                 if(_pointSet.get(i).getCircle().contains(x, y)){
                     /* USER HAS CLICKED ON THIS CIRCLE */
-                    _isMoving = true;
-                    _pointSet.get(i).setMarked(true);
-                    _selectedPoint = _pointSet.get(i);
-                    _adjacentPoints = findAdjacentPoints();
+                    if(!_explosion && !_explodeAdjacent) {
+                        _isMoving = true;
+                        _pointSet.get(i).setMarked(true);
+                        _selectedPoint = _pointSet.get(i);
+                        _adjacentPoints = findAdjacentPoints();
 
-                    _paintPath = createCustomPathPaint(_selectedPoint);
-                    _cellPath.add( new Point(xToCol(x), yToRow(y)) );
+                        _paintPath = createCustomPathPaint(_selectedPoint);
+                        _cellPath.add(new Point(xToCol(x), yToRow(y)));
+                    } /*else if(_explosion){
+                        for(int j = 0; j < _pointSet.size(); j++){
+                            if(_pointSet.get(j).getColor() == _pointSet.get(i).getColor() ){
+                                _pointSet.get(j).setMarked(true);
+                            }
+                        }
+                        _explosion = false;
+                        _isMatch = true;
+
+                    }*/
 
                 }
             }
@@ -174,6 +193,7 @@ public class BoardView extends View {
                         /* match */
                         _isMatch = true;
                         _adjacentPoints.get(i).setMarked(true);
+                        _pointSet.get(find(_adjacentPoints.get(i))).setMarked(true);
                         _selectedPoint = _adjacentPoints.get(i);
                         _adjacentPoints = findAdjacentPoints(); /* find new adjacent points */
 
@@ -198,13 +218,9 @@ public class BoardView extends View {
 
             if(_isMatch){
                 /* remove all marked points */
-                for(int i = 0; i < _pointSet.size() && i < _numCells * _numCells; i++){
+                for(int i = 0; i < _pointSet.size(); i++){
                     if(_pointSet.get(i).getMarked()){
                         int icr = checkHowManyRemoved(_pointSet.get(i).getCol(), _pointSet.get(i).getRow());
-                        _removedPoints.add(_pointSet.get(i));
-                        //_pointSet.remove(i);
-                        //_pointSet.get(i).setMarked(false);
-                        //i--;
 
                         _pointSet.get(i).setMarked(false);
                         _pointSet.get(i).setRow(_pointSet.get(i).getRow() - icr + 1);
@@ -223,21 +239,18 @@ public class BoardView extends View {
                     _eventHandler.onUpdateMove(); /* a move has been made by user */
                 }
 
-                //rePopulatePointSet();
             } else {
                 for(int i = 0; i < _pointSet.size(); i++){
                     _pointSet.get(i).setMarked(false);
                 }
             }
 
-            _removedPoints.clear();
             _paintPath = null;
             _isMatch = false;
             invalidate();
-
         }
 
-        return true;
+        return gestureDetector.onTouchEvent(event);
     }
 
 
@@ -245,9 +258,26 @@ public class BoardView extends View {
         _eventHandler = geh;
     }
 
+    public void setExplosion(){
+        _explosion = true;
+    }
+
+    public void setExplodeAdjancent(){
+        _explodeAdjacent = true;
+    }
+
     /***************************************************************************************/
     /********************************* PRIVATE METHODS *************************************/
     /***************************************************************************************/
+
+    private int find(Point p){
+        for(int i = 0; i < _pointSet.size(); i++){
+            if(_pointSet.get(i).getRow() == p.getRow() && _pointSet.get(i).getCol() == p.getCol()){
+                return i;
+            }
+        }
+        return -1; /* not found */
+    }
 
     private int checkHowManyRemoved(int col, int row){
         int counter = 0;
@@ -384,5 +414,51 @@ public class BoardView extends View {
     }
 
     /***************************************************************************************/
+    /********************** Inner class for detecting double taps **************************/
+    /***************************************************************************************/
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+        // event when double tap occurs
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            float x = e.getX();
+            float y = e.getY();
+
+            for(int i = 0; i < _pointSet.size(); i++){
+                if(_pointSet.get(i).getCircle().contains(x, y)){
+                    if(_explosion){
+                        for(int j = 0; j < _pointSet.size(); j++){
+                            if(_pointSet.get(j).getColor() == _pointSet.get(i).getColor() ){
+                                _pointSet.get(j).setMarked(true);
+                            }
+                        }
+                        _explosion = false;
+                        _isMatch = true;
+                        if(_eventHandler != null){
+                            _eventHandler.controlSpecialOps();
+                        }
+
+                    } else if(_explodeAdjacent){
+                        _selectedPoint = _pointSet.get(i);
+                        _adjacentPoints = findAdjacentPoints();
+                        for(int j = 0; j < _adjacentPoints.size(); j++){
+                            _adjacentPoints.get(j).setMarked(true);
+                            _selectedPoint.setMarked(true);
+                        }
+                        _explodeAdjacent = false;
+                        _isMatch = true;
+                        if(_eventHandler != null){
+                            _eventHandler.controlSpecialOps();
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+    }
 
 }

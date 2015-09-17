@@ -32,5 +32,7 @@
 
     <string name="final_score">Score</string>
     <string name="best_score">Best</string>
+    <string name="explode_board">Explosion!</string>
+    <string name="exploded_adjacent">Adjacent!</string>
 
 </resources>
