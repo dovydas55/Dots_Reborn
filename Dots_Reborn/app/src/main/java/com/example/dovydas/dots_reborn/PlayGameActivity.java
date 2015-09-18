@@ -36,6 +36,10 @@ public class PlayGameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        _sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String theme_entry = _sp.getString("themePref", "Dovy");
+        setTheme(getResources().getIdentifier(theme_entry, "style", "com.example.dovydas.dots_reborn"));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_game);
 
@@ -69,8 +73,6 @@ public class PlayGameActivity extends AppCompatActivity {
         }
 
         _vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        _sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
 
         /* working with handlers */
         _gameBoard.setGeneralHandler(new GeneralEventHandler() {

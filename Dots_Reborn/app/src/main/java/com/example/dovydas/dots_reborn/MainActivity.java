@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,17 +26,16 @@ public class MainActivity extends AppCompatActivity {
     private SquareIcon _ic_3;
     private SquareIcon _ic_4;
     private SharedPreferences _sp;
-    private int _theme;
+    private Intent _starterIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        /*theme test*/
-        /*
+
         _sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String theme_entry = _sp.getString("themePref", "R.style.Dovy");
-        Log.v("MainActivity", theme_entry);
-        */
-        //setTheme(R.style.Gunnhildur);
+        String theme_entry = _sp.getString("themePref", "Dovy");
+        setTheme(getResources().getIdentifier(theme_entry, "style", "com.example.dovydas.dots_reborn"));
+
+        _starterIntent = getIntent();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -52,7 +52,13 @@ public class MainActivity extends AppCompatActivity {
         action.setLogo(R.mipmap.ic_launcher);
         action.setDisplayUseLogoEnabled(true);
         action.setDisplayShowTitleEnabled(false);
+    }
 
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        finish();
+        startActivity(_starterIntent);
     }
 
     //throw this out?

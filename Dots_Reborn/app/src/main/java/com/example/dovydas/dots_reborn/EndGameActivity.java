@@ -41,6 +41,10 @@ public class EndGameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        _sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String theme_entry = _sp.getString("themePref", "Dovy");
+        setTheme(getResources().getIdentifier(theme_entry, "style", "com.example.dovydas.dots_reborn"));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end_game);
 
@@ -49,7 +53,6 @@ public class EndGameActivity extends AppCompatActivity {
         _sizeMap.put(6, "6x6");
         _sizeMap.put(8, "8x8");
 
-        _sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         _boardSize = _sizeMap.get(Integer.parseInt(_sp.getString("boardPref", "6")));
 
         Intent intent = getIntent();

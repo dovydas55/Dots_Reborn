@@ -8,7 +8,7 @@
         android:entryValues="@array/boardsize_values" />
     <ListPreference android:title="Theme"
         android:key="themePref"
-        android:defaultValue="R.style.Dovy"
+        android:defaultValue="Dovy"
         android:entries="@array/theme_entries"
         android:entryValues="@array/theme_values" />
 </PreferenceScreen>

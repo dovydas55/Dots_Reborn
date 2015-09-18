@@ -1,6 +1,8 @@
 package com.example.dovydas.dots_reborn;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,9 +21,14 @@ public class IntermediateHighscoreActivity extends AppCompatActivity {
     ViewGroup _highScoreSelect;
     private SquareIcon _selectMoves;
     private SquareIcon _selectTimed;
+    private SharedPreferences _sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        _sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String theme_entry = _sp.getString("themePref", "Dovy");
+        setTheme(getResources().getIdentifier(theme_entry, "style", "com.example.dovydas.dots_reborn"));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intermediate_highscore);
 
