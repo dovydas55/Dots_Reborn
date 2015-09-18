@@ -213,27 +213,42 @@ public class BoardView extends View {
 
             if(_isMatch){
                 _markedPoints = findMarked();
+                ArrayList<Point> column_above = new ArrayList();
                 for(int i = 0; i < _markedPoints.size(); i++){
-                    for(int j = 0; j < _pointSet.size(); j++){
-                        if(_markedPoints.get(i).getCol() == _pointSet.get(j).getCol() && _pointSet.get(j).getRow() < _markedPoints.get(i).getRow()){
-                            animateMovement(colToX(_pointSet.get(j).getCol()), rowToY(_pointSet.get(j).getRow()), rowToY(_pointSet.get(j).getRow() + 1), j);
-                            _pointSet.get(j).setRow(_pointSet.get(j).getRow() + 1);
-                        }
+                    Point being_deleted = _markedPoints.get(i);
 
+                    for(int j = 0; j < _pointSet.size(); j++){
+                        if(being_deleted.getCol() == _pointSet.get(j).getCol() && _pointSet.get(j).getRow() < being_deleted.getRow()){
+                            animateMovement(colToX(_pointSet.get(j).getCol()), rowToY(_pointSet.get(j).getRow()), rowToY(_pointSet.get(j).getRow() + 1), j);
+                            column_above.add(_pointSet.get(j));
+                        }
+                    }
+                    for(int k = 0; k < column_above.size(); k++){
+                        column_above.get(k).setRow(column_above.get(k).getRow() + 1);
                     }
 
-                    int index = find(_markedPoints.get(i));
-                    _pointSet.get(index).setMarked(false);
-                    _pointSet.get(index).setRow(0);
+
+
+                    Log.v("PlayGameActivity", "boo");
+
+                    being_deleted.setRow(0);
+                    being_deleted.setMarked(false);
                     int c = _rand.nextInt(NUM_COLORS);
-                    _pointSet.get(index).setColor(c);
+                    being_deleted.setColor(c);
+                    column_above.clear();
+
+                    //animate
+                    int index = find(_markedPoints.get(i));
                     _pointSet.get(index).setPaint(createPaintBrush(c));
                     animateMovement(colToX(_pointSet.get(index).getCol()), -1500, rowToY(_pointSet.get(index).getRow()), index);
+
+
 
                     if(_eventHandler != null){
                         _eventHandler.onUpdateScore();
                     }
                 }
+                _markedPoints.clear();
 
                 if(_eventHandler != null){
                     _eventHandler.onUpdateMove(); /* a move has been made by user */
