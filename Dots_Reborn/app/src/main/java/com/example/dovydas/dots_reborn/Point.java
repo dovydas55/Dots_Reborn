@@ -36,66 +36,48 @@ public class Point {
     }
 
     public ValueAnimator getAnimator(){
-        return _animator;
+        return this._animator;
     }
 
     public RectF getCircle(){
-        return _circle;
+        return this._circle;
     }
 
     public Paint getPaint(){
-        return _paint;
+        return this._paint;
     }
 
     public void setPaint(Paint p) {
-        _paint = p;
+        this._paint = p;
     }
 
     public int getColor(){
-        return _color;
+        return this._color;
     }
 
     public int getRow(){
-        return _row;
+        return this._row;
     }
 
     public void setRow(int row){
-        _row = row;
+        this._row = row;
     }
 
     public int getCol(){
-        return _col;
+        return this._col;
     }
 
-    public void setCol(int col){
-        _color = col;
+    public void setColor(int col){
+        this._color = col;
     }
 
     public boolean getMarked(){
-        return _marked;
+        return this._marked;
     }
 
     public void setMarked(boolean marked){
-        _marked = marked;
+        this._marked = marked;
     }
-
-
-    public double getX(){
-        return _x;
-    }
-
-    public void setX(double x){
-        _x = x;
-    }
-
-    public double getY(){
-        return _y;
-    }
-
-    public void setY(double y){
-        _y = y;
-    }
-
 
 
 
