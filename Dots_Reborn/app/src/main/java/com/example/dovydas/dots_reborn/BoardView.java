@@ -39,6 +39,7 @@ public class BoardView extends View {
 
     private ArrayList<Point> _pointSet;
     private ArrayList<Point> _adjacentPoints;
+    private ArrayList<Point> _markedPoints;
     private boolean _explosion = false;
     private boolean _explodeAdjacent = false;
 
@@ -75,6 +76,7 @@ public class BoardView extends View {
         /* ********************* */
 
         _adjacentPoints = new ArrayList<>();
+        _markedPoints = new ArrayList<>();
 
         _colorMap = new HashMap<>();
         _selectedPoint = null;
@@ -174,17 +176,7 @@ public class BoardView extends View {
 
                         _paintPath = createCustomPathPaint(_selectedPoint);
                         _cellPath.add(new Point(xToCol(x), yToRow(y)));
-                    } /*else if(_explosion){
-                        for(int j = 0; j < _pointSet.size(); j++){
-                            if(_pointSet.get(j).getColor() == _pointSet.get(i).getColor() ){
-                                _pointSet.get(j).setMarked(true);
-                            }
-                        }
-                        _explosion = false;
-                        _isMatch = true;
-
-                    }*/
-
+                    }
                 }
             }
         } else if(event.getAction() == MotionEvent.ACTION_MOVE){
@@ -194,7 +186,8 @@ public class BoardView extends View {
                         /* match */
                         _isMatch = true;
                         _adjacentPoints.get(i).setMarked(true);
-                        _pointSet.get(find(_adjacentPoints.get(i))).setMarked(true);
+                        int index = find(_adjacentPoints.get(i));
+                        _pointSet.get(index).setMarked(true);
                         _selectedPoint = _adjacentPoints.get(i);
                         _adjacentPoints = findAdjacentPoints(); /* find new adjacent points */
 
@@ -216,29 +209,52 @@ public class BoardView extends View {
             _isMoving = false;
             _adjacentPoints.clear();
             _cellPath.clear();
+            _markedPoints.clear();
 
             if(_isMatch){
-                /* remove all marked points */
-                for(int i = 0; i < _pointSet.size(); i++){
-                    if(_pointSet.get(i).getMarked()){
-                        int icr = checkHowManyRemoved(_pointSet.get(i).getCol(), _pointSet.get(i).getRow());
+                _markedPoints = findMarked();
+                ArrayList<Point> column_above = new ArrayList();
+                for(int i = 0; i < _markedPoints.size(); i++){
+                    Point being_deleted = _markedPoints.get(i);
 
-                        _pointSet.get(i).setMarked(false);
-                        _pointSet.get(i).setRow(_pointSet.get(i).getRow() - icr + 1);
-
-                        int c = _rand.nextInt(NUM_COLORS);
-                        _pointSet.get(i).setCol(c);
-                        _pointSet.get(i).setPaint(createPaintBrush(c));
-                        animateMovement(colToX(_pointSet.get(i).getCol()), -1500, rowToY(_pointSet.get(i).getRow()), i);
-
-                        if(_eventHandler != null){
-                            _eventHandler.onUpdateScore();
+                    for(int j = 0; j < _pointSet.size(); j++){
+                        if(being_deleted.getCol() == _pointSet.get(j).getCol() && _pointSet.get(j).getRow() < being_deleted.getRow()){
+                            animateMovement(colToX(_pointSet.get(j).getCol()), rowToY(_pointSet.get(j).getRow()), rowToY(_pointSet.get(j).getRow() + 1), j);
+                            column_above.add(_pointSet.get(j));
                         }
                     }
+                    for(int k = 0; k < column_above.size(); k++){
+                        column_above.get(k).setRow(column_above.get(k).getRow() + 1);
+                    }
+
+
+
+                    Log.v("PlayGameActivity", "boo");
+
+                    being_deleted.setRow(0);
+                    being_deleted.setMarked(false);
+                    int c = _rand.nextInt(NUM_COLORS);
+                    being_deleted.setColor(c);
+                    column_above.clear();
+
+                    //animate
+                    int index = find(_markedPoints.get(i));
+                    _pointSet.get(index).setPaint(createPaintBrush(c));
+                    animateMovement(colToX(_pointSet.get(index).getCol()), -1500, rowToY(_pointSet.get(index).getRow()), index);
+
+
+
+                    if(_eventHandler != null){
+                        _eventHandler.onUpdateScore();
+                    }
                 }
+                _markedPoints.clear();
+
                 if(_eventHandler != null){
                     _eventHandler.onUpdateMove(); /* a move has been made by user */
                 }
+
+
 
             } else {
                 for(int i = 0; i < _pointSet.size(); i++){
@@ -291,6 +307,16 @@ public class BoardView extends View {
         return counter;
     }
 
+    private ArrayList<Point> findMarked(){
+        ArrayList<Point> arr = new ArrayList<>();
+        for(int i = 0; i < _pointSet.size(); i++){
+            if (_pointSet.get(i).getMarked()){
+                arr.add(_pointSet.get(i));
+            }
+        }
+        return arr;
+    }
+
     private ArrayList<Point> findAdjacentPoints(){
         ArrayList<Point> arr = new ArrayList<>();
         for(Point p : _pointSet){
@@ -300,6 +326,7 @@ public class BoardView extends View {
         }
         return arr;
     }
+
 
     private boolean adjacentPoint(Point p){
         if(_selectedPoint.getRow() == p.getRow()){
@@ -334,7 +361,7 @@ public class BoardView extends View {
         Random rand = new Random();
         for(int i = 0; i < _numCells; i++){
             for(int j = 0; j < _numCells; j++){
-                int color = rand.nextInt(5); /* General formula rand.nextInt((max - min) + 1) + min;*/
+                int color = rand.nextInt(NUM_COLORS); /* General formula rand.nextInt((max - min) + 1) + min;*/
                 _pointSet.add(new Point(j, i, color, createPaintBrush(color), createCircle(j, i), false));
             }
         }
@@ -397,7 +424,7 @@ public class BoardView extends View {
 
     private void animateMovement(final int xT, final float yFrom, final float yTo, final int i) {
         _pointSet.get(i).getAnimator().removeAllUpdateListeners();
-        _pointSet.get(i).getAnimator().setDuration(1500);
+        _pointSet.get(i).getAnimator().setDuration(1000);
         _pointSet.get(i).getAnimator().setFloatValues(0.0f, 1.0f);
         _pointSet.get(i).getAnimator().addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override

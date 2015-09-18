@@ -21,7 +21,7 @@ public class PlayGameActivity extends AppCompatActivity {
     private TextView _displayScore;
     private TextView _displayTimeOrMoves;
     private int _secondsLeft;
-    private int _movesLeft = 5; /* MAKE SURE TO CHANGE IT BACK!!*/
+    private int _movesLeft = 30;
     private int _gameScore = 0;
     private BoardView _gameBoard;
     private int SPECIAL_OPS = 5;
