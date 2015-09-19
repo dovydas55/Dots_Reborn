@@ -240,6 +240,9 @@ public class BoardView extends View {
                             _pointSet.get(i).setMarked(true);
                         }
                     }
+                    if(_eventHandler != null){
+                        _eventHandler.playBigBomb();
+                    }
                 }
 
 
