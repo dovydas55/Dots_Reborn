@@ -3,12 +3,14 @@ package com.example.dovydas.dots_reborn;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,9 +28,17 @@ public class PlayGameActivity extends AppCompatActivity {
     private BoardView _gameBoard;
     private int SPECIAL_OPS = 3;
     private TextView _displayCheats;
+    private int _soundCounter = 0;
+    private MediaPlayer _mySound1;
+    private MediaPlayer _mySound2;
+    private MediaPlayer _mySound3;
+    private MediaPlayer _mySound4;
+    private MediaPlayer _mySound5;
+    private MediaPlayer _mySound6;
 
     private Vibrator _vibrator;
     private boolean _use_vibration = false;
+    private boolean _use_soundEffects = true;
     private SharedPreferences _sp;
 
     public final static String FINAL_SCORE = "com.example.dovydas.dots_reborn.FINAL_SCORE";
@@ -63,6 +73,7 @@ public class PlayGameActivity extends AppCompatActivity {
         _gameBoard = (BoardView) findViewById(R.id.gameCanvas);
         _displayCheats = (TextView) findViewById(R.id.spec);
 
+        initializeSound();
         updateScore(); /* initializing score */
         displayCheatView(); /* initialize cheats */
         if(_gameMode.equals("Move mode")){
@@ -99,6 +110,20 @@ public class PlayGameActivity extends AppCompatActivity {
                 displayCheatView();
             }
 
+            @Override
+            public void playSound(){
+                if(_use_soundEffects){
+                    _soundCounter++;
+                    playSoundEffects();
+                }
+            }
+
+            @Override
+            public void clearSound(){
+                _soundCounter = 0;
+
+            }
+
         });
 
     }
@@ -106,7 +131,8 @@ public class PlayGameActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-        _use_vibration = _sp.getBoolean("vibrate",false);
+        _use_vibration = _sp.getBoolean("vibrate", false);
+        _use_soundEffects = _sp.getBoolean("sound", true);
 
     }
 
@@ -157,6 +183,31 @@ public class PlayGameActivity extends AppCompatActivity {
         }
     }
 
+    /***************************************************************************************/
+    /********************************* PRIVATE METHODS *************************************/
+    /***************************************************************************************/
+
+    private void playSoundEffects(){
+        if(_soundCounter == 1){
+            _mySound1.start();
+        } else if(_soundCounter == 2){
+            _mySound2.start();
+        } else if(_soundCounter == 3) {
+            _mySound3.start();
+        } else if(_soundCounter == 4){
+            _mySound4.start();
+        } else if(_soundCounter == 5){
+            _mySound5.start();
+        } else if(_soundCounter == 6){
+            _mySound6.start();
+        }
+        else {
+            _mySound1.start();
+            _soundCounter = 1;
+
+        }
+    }
+
     private void updateScore(){
         _displayScore.setText("Score " + Integer.toString(_gameScore));
 
@@ -193,6 +244,16 @@ public class PlayGameActivity extends AppCompatActivity {
         intent.putExtra(FINAL_SCORE, Integer.toString(_gameScore));
         intent.putExtra(GAMEMODE, _gameMode);
         startActivity(intent);
+    }
+
+    private void initializeSound(){
+        _mySound1 = MediaPlayer.create(this, R.raw.doshort);
+        _mySound2 = MediaPlayer.create(this, R.raw.reshort);
+        _mySound3 = MediaPlayer.create(this, R.raw.mishort);
+        _mySound4 = MediaPlayer.create(this, R.raw.fashort);
+        _mySound5 = MediaPlayer.create(this, R.raw.solshort);
+        _mySound6 = MediaPlayer.create(this, R.raw.lashort);
+
     }
 
 }

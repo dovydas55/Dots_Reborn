@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -29,10 +30,12 @@ public class EndGameActivity extends AppCompatActivity {
     private int _userScore;
     private String _gameMode;
     private ArrayList<Record> _data;
+    private MediaPlayer _endGameSound;
 
     private HashMap<Integer, String> _sizeMap;
     private SharedPreferences _sp;
     private String _boardSize;
+    private boolean _use_soundEffects = true;
 
     private Context context = this;
     private UserDbHelper _userDbHelper;
@@ -63,6 +66,7 @@ public class EndGameActivity extends AppCompatActivity {
         _afterGameMessage = (TextView) findViewById(R.id.msg);
         _gameMode = intent.getStringExtra(PlayGameActivity.GAMEMODE);
         _data = new ArrayList<>();
+        _endGameSound = MediaPlayer.create(this, R.raw.gameover);
 
         _userDbHelper = new UserDbHelper(context);
         _sqLiteDatabase = _userDbHelper.getWritableDatabase();
@@ -81,6 +85,16 @@ public class EndGameActivity extends AppCompatActivity {
     public void onStart(){
         super.onStart();
         startCountAnimation();
+        _use_soundEffects = _sp.getBoolean("sound", true);
+        if(_use_soundEffects){
+            _endGameSound.start();
+        }
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        _endGameSound.release();
     }
 
     @Override

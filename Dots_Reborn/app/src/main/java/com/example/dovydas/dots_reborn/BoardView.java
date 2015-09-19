@@ -179,6 +179,10 @@ public class BoardView extends View {
 
                         _paintPath = createCustomPathPaint(_selectedPoint);
                         _cellPath.add(new Point(xToCol(x), yToRow(y)));
+
+                        if(_eventHandler != null){
+                            _eventHandler.playSound();
+                        }
                     }
                 }
             }
@@ -211,6 +215,10 @@ public class BoardView extends View {
                             int row = yToRow(y);
 
                             _cellPath.add(new Point(col, row));
+                            /* unique connection has been made */
+                            if(_eventHandler != null){
+                                _eventHandler.playSound();
+                            }
 
                         }
                         invalidate();
@@ -279,13 +287,16 @@ public class BoardView extends View {
                     _eventHandler.onUpdateMove(); /* a move has been made by user */
                 }
 
-
-
             } else {
                 for(int i = 0; i < _pointSet.size(); i++){
                     _pointSet.get(i).setMarked(false);
                 }
             }
+
+            if(_eventHandler != null){
+                _eventHandler.clearSound();
+            }
+
             _square = -1;
             _paintPath = null;
             _isMatch = false;

@@ -7,5 +7,7 @@ public interface GeneralEventHandler {
     void onUpdateScore();
     void onUpdateMove();
     void controlSpecialOps();
+    void playSound();
+    void clearSound();
 }
 
