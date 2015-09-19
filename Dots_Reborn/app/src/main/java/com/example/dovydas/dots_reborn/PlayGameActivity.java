@@ -24,7 +24,7 @@ public class PlayGameActivity extends AppCompatActivity {
     private int _movesLeft = 30;
     private int _gameScore = 0;
     private BoardView _gameBoard;
-    private int SPECIAL_OPS = 5;
+    private int SPECIAL_OPS = 3;
     private TextView _displayCheats;
 
     private Vibrator _vibrator;
@@ -135,7 +135,7 @@ public class PlayGameActivity extends AppCompatActivity {
     }
 
     public void displayCheatView(){
-        _displayCheats.setText(Integer.toString(SPECIAL_OPS));
+        _displayCheats.setText("Cheats left: " + Integer.toString(SPECIAL_OPS));
     }
 
     public void shuffleBoard(View v){

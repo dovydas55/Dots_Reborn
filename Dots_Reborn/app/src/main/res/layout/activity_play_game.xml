@@ -11,29 +11,29 @@
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:layout_weight="1">
-        <TextView
+        <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/explode_board"
+            android:src="@drawable/ic_bomb"
             android:onClick="explodeBoard"
             android:gravity="center"
             android:textSize="20sp"/>
 
-        <TextView
+        <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/shuffle_board"
+            android:src="@drawable/ic_shuffle"
             android:onClick="shuffleBoard"
             android:gravity="center"
             android:textSize="20sp"/>
 
-        <TextView
+        <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/exploded_adjacent"
+            android:src="@drawable/ic_adjacent"
             android:onClick="explodeAdjacent"
             android:gravity="center"
             android:textSize="20sp"/>
@@ -51,7 +51,7 @@
         android:id="@+id/gameCanvas"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:background="@color/dovydark"
+
         android:layout_margin="30dp"
         android:padding="15dp"
         android:layout_gravity="center" />
