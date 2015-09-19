@@ -92,7 +92,7 @@ public class EndGameActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStop(){
+    protected void onStop(){
         super.onStop();
         _endGameSound.release();
     }

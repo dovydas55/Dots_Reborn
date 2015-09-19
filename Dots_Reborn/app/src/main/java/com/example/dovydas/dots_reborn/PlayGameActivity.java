@@ -35,6 +35,10 @@ public class PlayGameActivity extends AppCompatActivity {
     private MediaPlayer _mySound4;
     private MediaPlayer _mySound5;
     private MediaPlayer _mySound6;
+    private MediaPlayer _shuffleSound;
+    private MediaPlayer _bigBomgSound;
+    private MediaPlayer _smallBomb;
+
 
     private Vibrator _vibrator;
     private boolean _use_vibration = false;
@@ -124,6 +128,20 @@ public class PlayGameActivity extends AppCompatActivity {
 
             }
 
+            @Override
+            public void playBigBomb(){
+                if(_use_soundEffects){
+                    _bigBomgSound.start();
+                }
+            }
+
+            @Override
+            public void smallBomb(){
+                if(_use_soundEffects){
+                    _smallBomb.start();
+                }
+            }
+
         });
 
     }
@@ -134,6 +152,20 @@ public class PlayGameActivity extends AppCompatActivity {
         _use_vibration = _sp.getBoolean("vibrate", false);
         _use_soundEffects = _sp.getBoolean("sound", true);
 
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        _mySound1.release();
+        _mySound2.release();
+        _mySound3.release();
+        _mySound4.release();
+        _mySound5.release();
+        _mySound6.release();
+        _shuffleSound.release();
+        _bigBomgSound.release();
+        _smallBomb.release();
     }
 
     @Override
@@ -166,6 +198,9 @@ public class PlayGameActivity extends AppCompatActivity {
 
     public void shuffleBoard(View v){
         if(SPECIAL_OPS > 0){
+            if(_use_soundEffects){
+                _shuffleSound.start();
+            }
             _gameBoard.shuffleBoard();
         }
 
@@ -253,7 +288,12 @@ public class PlayGameActivity extends AppCompatActivity {
         _mySound4 = MediaPlayer.create(this, R.raw.fashort);
         _mySound5 = MediaPlayer.create(this, R.raw.solshort);
         _mySound6 = MediaPlayer.create(this, R.raw.lashort);
+        _shuffleSound = MediaPlayer.create(this, R.raw.shuffle);
+        _bigBomgSound = MediaPlayer.create(this, R.raw.bigbomb);
+        _smallBomb = MediaPlayer.create(this, R.raw.smallbomb);
 
     }
+
+
 
 }

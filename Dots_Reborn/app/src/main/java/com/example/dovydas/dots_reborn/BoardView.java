@@ -504,6 +504,7 @@ public class BoardView extends View {
                         _isMatch = true;
                         if(_eventHandler != null){
                             _eventHandler.controlSpecialOps();
+                            _eventHandler.playBigBomb();
                         }
 
                     } else if(_explodeAdjacent){
@@ -516,6 +517,7 @@ public class BoardView extends View {
                         _explodeAdjacent = false;
                         _isMatch = true;
                         if(_eventHandler != null){
+                            _eventHandler.smallBomb();
                             _eventHandler.controlSpecialOps();
                         }
                     }

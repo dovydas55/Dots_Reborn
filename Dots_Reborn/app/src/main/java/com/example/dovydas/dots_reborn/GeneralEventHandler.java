@@ -9,5 +9,7 @@ public interface GeneralEventHandler {
     void controlSpecialOps();
     void playSound();
     void clearSound();
+    void playBigBomb();
+    void smallBomb();
 }
 
