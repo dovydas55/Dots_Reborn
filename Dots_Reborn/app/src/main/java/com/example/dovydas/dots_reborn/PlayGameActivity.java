@@ -158,8 +158,8 @@ public class PlayGameActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop(){
-        super.onStop();
+    protected void onDestroy(){
+        super.onDestroy();
         _mySound1.release();
         _mySound2.release();
         _mySound3.release();
