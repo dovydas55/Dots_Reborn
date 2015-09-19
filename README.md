@@ -24,7 +24,7 @@ Main menu with selection of options, highscores, gameplay based on moves and gam
 ##### High Scores:
 * Player can select between displaying high scores from moves mode or timed mode
 * In the display, player can switch between high scores for different board sizes
-* Player can clear high scores
+* Player can clear high scores for each board size 
 * High scores are stored in SQLite database
 
 ##### Additional features:
