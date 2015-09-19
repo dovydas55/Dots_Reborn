@@ -24,7 +24,7 @@ Main menu with selection of options, highscores, gameplay based on moves and gam
 ##### High Scores:
 * Player can select between displaying high scores from moves mode or timed mode
 * In the display, player can switch between high scores for different board sizes
-* Player can clear high scores
+* Player can clear high scores for each board size 
 * High scores are stored in SQLite database
 
 ##### Additional features:
@@ -33,4 +33,4 @@ Main menu with selection of options, highscores, gameplay based on moves and gam
 * All icons are homemade by developers
 
 #### Knows bugs:
-* There is a glitch in the animation when a vertical line of dots is erased. This however does not influence gameplay in any way, the right colored dots end up in the right places, but the animation of the transision is a little off.
+* There is a glitch in the animation when a vertical line of dots is erased. This however does not influence gameplay in any way, all the right colored dots end up in the right places.
