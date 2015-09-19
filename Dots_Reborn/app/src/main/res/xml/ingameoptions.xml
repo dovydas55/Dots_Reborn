@@ -7,13 +7,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:textSize="20sp"/>
-    <SwitchPreference android:title="Music"
-        android:defaultValue="false"
-        android:key="music"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:textSize="20sp"/>
     <SwitchPreference android:title="Sound effects"
         android:defaultValue="true"
         android:key="sound"
