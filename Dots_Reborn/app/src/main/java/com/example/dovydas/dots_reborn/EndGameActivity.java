@@ -165,7 +165,7 @@ public class EndGameActivity extends AppCompatActivity {
     private void addScoreToDb(){
         Record rec = new Record(_userScore, new Date(), _boardSize, _gameMode);
         _userDbHelper.addInformations(rec.getHighScore(), rec.getTime(), rec.getBoardSize(), rec.getGameMode(), _sqLiteDatabase);
-        Toast.makeText(getBaseContext(), "Data saved", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getBaseContext(), "Data saved", Toast.LENGTH_LONG).show();
         _userDbHelper.close();
     }
 
