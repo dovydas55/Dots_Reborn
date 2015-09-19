@@ -72,7 +72,7 @@ public class PlayGameActivity extends AppCompatActivity {
         if(_gameMode.isEmpty() || _gameMode == null){
             _gameMode = intent.getStringExtra(EndGameActivity.GAME_MODE);
         }
-        Toast.makeText(getApplicationContext(), _gameMode, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), _gameMode, Toast.LENGTH_SHORT).show();
         /* *** *** *** *** *** */
 
         _displayScore = (TextView) findViewById(R.id.play_display_score);
