@@ -32,5 +32,11 @@ Main menu with selection of options, highscores, gameplay based on moves and gam
 * Action bar settings allow user to turn on and off vibration (set to vibrate each time score increases), music during gameplay and sound effects
 * All icons are homemade by developers
 
+##### Sound effects:
+* As player connects a sequence of dots, with each connection different piano sound is played (DO-RE-MI-FA-SOL-LA)
+* Each game cheat also has different sound effects: shuffle - shuffeling sound, remove adjacent has small explosion sound and removing all same color dots would play big explosion sound
+* At the end of the game, 'end game' music is played
+
+
 #### Knows bugs:
 * There is a glitch in the animation when a vertical line of dots is erased. This however does not influence gameplay in any way, all the right colored dots end up in the right places.
