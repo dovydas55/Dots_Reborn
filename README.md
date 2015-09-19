@@ -3,11 +3,11 @@ Simple android puzzle based on "Dots" Game
 
 #### Features:
 Main menu with selection of options, highscores, gameplay based on moves and gameplay based on time
-#### ---------
+
 #### Options:
 * Selection between three board sizes (4x4, 6x6, 8x8)
 * Selection between two themes, the default is Dovy's Theme, Gunnhildur's theme is light
-#### ---------
+
 #### Moves mode:
 * Fully functioning gameplay as in the original Dots game
 * Making squares erases all dots of same color from the board and gives player one extra move 
