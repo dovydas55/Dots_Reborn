@@ -177,7 +177,7 @@ public class PlayGameActivity extends AppCompatActivity {
     {
         new AlertDialog.Builder(this)
                 .setTitle("Exit?")
-                .setMessage("Are you sure you want to exit? All youre scores will be lost!")
+                .setMessage("Are you sure you want to exit? Youre current score will not be saved!")
                 .setNegativeButton(android.R.string.no, null)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
