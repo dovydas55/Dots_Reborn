@@ -264,9 +264,6 @@ public class BoardView extends View {
                     }
 
 
-
-                    Log.v("PlayGameActivity", "boo");
-
                     being_deleted.setRow(0);
                     being_deleted.setMarked(false);
                     int c = _rand.nextInt(NUM_COLORS);
