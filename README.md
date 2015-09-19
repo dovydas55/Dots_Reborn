@@ -4,6 +4,7 @@ Simple android puzzle based on "Dots" Game
 ## TASK LIST
 ### GUNNHILDUR:
 ###### Get themes running properly
+###### Look at background in game
 ###### Make buttons for cheats - set one of each?
 ###### Fix gravity animation
 ###### Sound and music options
