@@ -28,8 +28,7 @@ Main menu with selection of options, highscores, gameplay based on moves and gam
 * High scores are stored in SQLite database
 
 ##### Additional features:
-* At the end of each game a view with players score is displayed along with current high score in that mode & board size. The view gives player easy access to a new game or home menu
+* At the end of each game a view with player's score is displayed along with current high score in that mode & board size. The view gives player easy access to a new game or home menu
 * Action bar settings allow user to turn on and off vibration (set to vibrate each time score increases), music during gameplay and sound effects
-
-
+* All icons are homemade by developers
 
