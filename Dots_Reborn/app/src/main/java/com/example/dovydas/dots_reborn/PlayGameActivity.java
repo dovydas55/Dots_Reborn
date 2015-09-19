@@ -1,6 +1,8 @@
 package com.example.dovydas.dots_reborn;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -38,6 +40,7 @@ public class PlayGameActivity extends AppCompatActivity {
     private MediaPlayer _shuffleSound;
     private MediaPlayer _bigBomgSound;
     private MediaPlayer _smallBomb;
+    private CountDownTimer _time;
 
 
     private Vibrator _vibrator;
@@ -166,6 +169,29 @@ public class PlayGameActivity extends AppCompatActivity {
         _shuffleSound.release();
         _bigBomgSound.release();
         _smallBomb.release();
+
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        new AlertDialog.Builder(this)
+                .setTitle("Exit?")
+                .setMessage("Are you sure you want to exit? All youre scores will be lost!")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        if(_time != null){
+                            _time.cancel();
+                        }
+
+                    }
+                }).create().show();
+
+
     }
 
     @Override
@@ -258,7 +284,7 @@ public class PlayGameActivity extends AppCompatActivity {
     }
 
     private void startTimeCounter(){
-        new CountDownTimer(30000, 100) {
+        _time = new CountDownTimer(30000, 100) {
             public void onTick(long ms) {
                 if (Math.round((float)ms / 1000.0f) != _secondsLeft)
                 {
