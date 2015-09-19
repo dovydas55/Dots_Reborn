@@ -275,7 +275,7 @@ public class BoardView extends View {
                 }
                 _markedPoints.clear();
 
-                if(_eventHandler != null){
+                if(_eventHandler != null && _square < 0){
                     _eventHandler.onUpdateMove(); /* a move has been made by user */
                 }
 
