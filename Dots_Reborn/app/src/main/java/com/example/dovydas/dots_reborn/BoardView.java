@@ -47,6 +47,7 @@ public class BoardView extends View {
     private boolean _isMoving = false;
     private boolean _isMatch = false;
     private Point _selectedPoint;
+    private Point _lastSelected;
     private GestureDetector gestureDetector;
 
     /* member variables for displaying the path */
@@ -62,8 +63,10 @@ public class BoardView extends View {
     /* ****************************** */
 
     private GeneralEventHandler _eventHandler = null;
-    private int NUM_CELLS = 6; /* default board size */
+    //private int NUM_CELLS = 6; /* default board size */
     private int NUM_COLORS = 5;
+
+    private int _square = -1;
 
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -182,12 +185,23 @@ public class BoardView extends View {
         } else if(event.getAction() == MotionEvent.ACTION_MOVE){
             if(_isMoving){
                 for(int i = 0; i < _adjacentPoints.size(); i++){
-                    if(_adjacentPoints.get(i).getCircle().contains(x,y) && _adjacentPoints.get(i).getColor() == _selectedPoint.getColor() && !_adjacentPoints.get(i).getMarked()){
+                    if(_adjacentPoints.get(i).getCircle().contains(x,y)
+                            && _adjacentPoints.get(i).getColor() == _selectedPoint.getColor()
+                            && _adjacentPoints.get(i) != _lastSelected){
                         /* match */
+
+                        /*check for a square*/
+                        if(_adjacentPoints.get(i).getMarked()){
+                            _square = _adjacentPoints.get(i).getColor();
+                        }
+
                         _isMatch = true;
                         _adjacentPoints.get(i).setMarked(true);
                         int index = find(_adjacentPoints.get(i));
                         _pointSet.get(index).setMarked(true);
+
+                        _lastSelected = _selectedPoint;
+
                         _selectedPoint = _adjacentPoints.get(i);
                         _adjacentPoints = findAdjacentPoints(); /* find new adjacent points */
 
@@ -195,10 +209,9 @@ public class BoardView extends View {
                         if ( !_cellPath.isEmpty( ) ) {
                             int col = xToCol(x);
                             int row = yToRow(y);
-                            Point last = _cellPath.get(_cellPath.size() - 1);
-                            if (col != last.getCol() || row != last.getRow()) {
-                                _cellPath.add(new Point(col, row));
-                            }
+
+                            _cellPath.add(new Point(col, row));
+
                         }
                         invalidate();
                     }
@@ -212,10 +225,22 @@ public class BoardView extends View {
             _markedPoints.clear();
 
             if(_isMatch){
+
+                if(_square >= 0){
+                    for(int i = 0; i < _pointSet.size(); i++){
+                        if(_pointSet.get(i).getColor() == _square ){
+                            _pointSet.get(i).setMarked(true);
+                        }
+                    }
+                }
+
+
                 _markedPoints = findMarked();
                 ArrayList<Point> column_above = new ArrayList();
                 for(int i = 0; i < _markedPoints.size(); i++){
                     Point being_deleted = _markedPoints.get(i);
+
+                    //TODO: Keep track of starting point and end point and then animate that movement.
 
                     for(int j = 0; j < _pointSet.size(); j++){
                         if(being_deleted.getCol() == _pointSet.get(j).getCol() && _pointSet.get(j).getRow() < being_deleted.getRow()){
@@ -261,7 +286,7 @@ public class BoardView extends View {
                     _pointSet.get(i).setMarked(false);
                 }
             }
-
+            _square = -1;
             _paintPath = null;
             _isMatch = false;
             invalidate();
@@ -320,7 +345,7 @@ public class BoardView extends View {
     private ArrayList<Point> findAdjacentPoints(){
         ArrayList<Point> arr = new ArrayList<>();
         for(Point p : _pointSet){
-            if (adjacentPoint(p) && !p.getMarked()){
+            if (adjacentPoint(p)){
                 arr.add(p);
             }
         }
